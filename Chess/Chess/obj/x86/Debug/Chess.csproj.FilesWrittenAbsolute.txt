@@ -1,0 +1,6 @@
+/home/jonas/TDDD49/Chess/Chess/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/jonas/TDDD49/Chess/Chess/obj/x86/Debug/Chess.gtk-gui.gui.stetic
+/home/jonas/TDDD49/Chess/Chess/bin/Debug/Chess.exe.mdb
+/home/jonas/TDDD49/Chess/Chess/bin/Debug/Chess.exe
+/home/jonas/TDDD49/Chess/Chess/obj/x86/Debug/Chess.exe
+/home/jonas/TDDD49/Chess/Chess/obj/x86/Debug/Chess.exe.mdb
