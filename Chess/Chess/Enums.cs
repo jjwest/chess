@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Chess
+namespace Enums
 {
 	public enum GamePieces
 	{

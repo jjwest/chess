@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Collections.Generic;
 using Rules;
+using Entities;
 
-namespace Chess
+namespace Rules
 {
 	public class RuleBook
 	{

@@ -1,9 +1,15 @@
 ﻿<Properties StartupItem="Chess/Chess.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Chess/Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Chess/Properties/GameLogic.cs">
     <Files>
-      <File FileName="Chess/Program.cs" Line="10" Column="4" />
+      <File FileName="Chess/Program.cs" Line="5" Column="16" />
+      <File FileName="Chess/Entities.cs" Line="2" Column="13" />
+      <File FileName="Chess/Rules.cs" Line="28" Column="6" />
+      <File FileName="Chess/Properties/GameLogic.cs" Line="33" Column="4" />
+      <File FileName="Chess/RuleBook.cs" Line="5" Column="16" />
+      <File FileName="Chess/Enums.cs" Line="3" Column="16" />
       <File FileName="Chess/MainWindow.cs" Line="17" Column="1" />
+      <File FileName="Chess/Database.cs" Line="4" Column="19" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

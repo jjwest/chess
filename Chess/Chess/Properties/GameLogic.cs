@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using Rules;
+using Entities;
+using Enums;
+using Database;
 
 
 namespace Chess
 {
 	public class GameLogic
 	{
+		private DatabaseInterface database;
 		private RuleBook ruleBook;
 
-		GameLogic()
+		GameLogic(DatabaseInterface _database)
 		{
+			database = _database;
 			LoadRules();
 		}
 
@@ -22,6 +27,7 @@ namespace Chess
 			{
 				gameState.GameBoard [piece.CurrentPos.y] [piece.CurrentPos.x] = Tuple.Create (GamePieces.None, Players.None);
 				gameState.GameBoard [piece.RequestedPos.y] [piece.RequestedPos.x] = Tuple.Create (piece.Type, piece.Color);
+				gameState.ActivePlayer = gameState.ActivePlayer == Players.White ? Players.Black : Players.White;
 				UpdateBoard(gameState);
 			}
 
@@ -39,7 +45,7 @@ namespace Chess
 
 		public void ResetBoard()
 		{
-			//DB.ClearBoard();
+			database.ClearBoard();
 		}
 
 		private void LoadRules()
@@ -51,12 +57,12 @@ namespace Chess
 
 		private void UpdateBoard(GameStateEntity gameBoard)
 		{
-			//DB.SetState();
+			database.SetState(gameBoard);
 		}
 
 		private GameStateEntity GetBoardState()
 		{
-			//DB.GetState();
+			return database.GetState();
 		}
 
 	}

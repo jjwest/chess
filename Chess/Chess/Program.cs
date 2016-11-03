@@ -1,8 +1,8 @@
 ﻿using System;
 using Gtk;
-using Chess;
+using Enums;
 
-namespace GameLogic
+namespace Chess
 {
 	class MainClass
 	{

@@ -1,6 +1,7 @@
 ﻿using System;
+using Enums;
 
-namespace Chess
+namespace Entities
 {
 	public struct Point
 	{
@@ -10,10 +11,11 @@ namespace Chess
 	
 	public class GameStateEntity
 	{
-		public Tuple<GamePieces, Players> [][] GameBoard { get; set; } 
 		public bool PawnIsPromoted { get; set; } = false;
 		public bool KingIsChecked { get; set; } = false;
+		public Players ActivePlayer { get; set; } = Players.White;
 		public Players Winner { get; set; } = Players.None;
+		public Tuple<GamePieces, Players> [][] GameBoard { get; set; } 
 
 		GameStateEntity(Tuple<GamePieces, Players> [][] gameBoard)
 		{
