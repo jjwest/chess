@@ -6,19 +6,18 @@ using Entities;
 
 namespace Rules
 {
-	public class RuleBook
-	{
-		private  List<Rule> rules;
+    public class RuleBook
+    {
+        private List<Rule> rules = new List<Rule>();
 
-		public RuleBook (List<Rule> _rules)
-		{
-			rules = _rules;
-		}
+        public void AddRule(Rule rule)
+        {
+            rules.Add(rule);
+        }
 
-		public bool MoveIsValid(GamePieceEntity piece, GameStateEntity gameBoard)
-		{
-			return rules.All(rule => rule.IsValid(piece, gameBoard));
-		}
-	}
+    	public bool MoveIsValid(GamePieceEntity piece, GameStateEntity gameBoard)
+    	{
+    	    return rules.All(rule => rule.IsValid(piece, gameBoard));
+    	}
+    }
 }
-

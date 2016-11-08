@@ -2,22 +2,21 @@
 
 namespace Enums
 {
-	public enum GamePieces
-	{
-		Pawn,
-		Bishop,
-		Knight,
-		Rook,
-		Queen,
-		King,
-		None
-	}
+    public enum PieceType
+    {
+    	Pawn,
+    	Bishop,
+    	Knight,
+    	Rook,
+    	Queen,
+    	King,
+    	None
+    }
 
-	public enum Players
-	{
-		White,
-		Black,
-		None
-	}
+    public enum Player
+    {
+    	White,
+    	Black,
+    	None
+    }
 }
-
