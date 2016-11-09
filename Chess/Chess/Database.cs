@@ -14,10 +14,86 @@ namespace Database
     public class Database: DatabaseInterface
     {
         private GamePiece[][] board = new GamePiece[][] {
-            new GamePiece[] {new GamePiece(PieceType.Bishop, Player.White), new GamePiece(PieceType.None, Player.None), new GamePiece(PieceType.None, Player.None), new GamePiece(PieceType.None, Player.None)},
-            new GamePiece[] {new GamePiece(PieceType.None, Player.None), new GamePiece(PieceType.None, Player.None), new GamePiece(PieceType.Queen, Player.White), new GamePiece(PieceType.None, Player.None)},
-            new GamePiece[] {new GamePiece(PieceType.Rook, Player.Black), new GamePiece(PieceType.None, Player.None), new GamePiece(PieceType.None, Player.None), new GamePiece(PieceType.None, Player.None)},
-            new GamePiece[] {new GamePiece(PieceType.None, Player.None), new GamePiece(PieceType.Pawn, Player.White), new GamePiece(PieceType.None, Player.None), new GamePiece(PieceType.None, Player.None)}
+            new GamePiece[] {
+                new GamePiece(PieceType.Rook, Color.Black), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.King, Color.Black),
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.Rook, Color.Black)
+            },
+            new GamePiece[] {
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None)
+            },
+            new GamePiece[] {
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None)
+            },
+            new GamePiece[] {
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None)
+            },
+            new GamePiece[] {
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None)
+            },
+            new GamePiece[] {
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None)
+            },
+            new GamePiece[] {
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None)
+            },
+            new GamePiece[] {
+                new GamePiece(PieceType.Rook, Color.White), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.King, Color.White), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.None, Color.None), 
+                new GamePiece(PieceType.Rook, Color.White)
+            }  
         };
 
         public GameStateEntity GetState()

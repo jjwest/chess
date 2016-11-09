@@ -13,7 +13,7 @@ namespace Enums
     	None
     }
 
-    public enum Player
+    public enum Color
     {
     	White,
     	Black,

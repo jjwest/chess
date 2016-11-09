@@ -15,7 +15,7 @@ namespace Rules
             rules.Add(rule);
         }
 
-    	public bool MoveIsValid(GamePieceEntity piece, GameStateEntity gameBoard)
+    	public bool MoveIsValid(GameMoveEntity piece, GameStateEntity gameBoard)
     	{
     	    return rules.All(rule => rule.IsValid(piece, gameBoard));
     	}

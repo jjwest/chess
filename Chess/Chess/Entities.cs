@@ -19,8 +19,8 @@ namespace Entities
     {
     	public bool PawnIsPromoted { get; set; } = false;
     	public bool KingIsChecked { get; set; } = false;
-    	public Player ActivePlayer { get; set; } = Player.White;
-    	public Player Winner { get; set; } = Player.None;
+    	public Color ActivePlayer { get; set; } = Color.Black;
+    	public Color Winner { get; set; } = Color.None;
         public GamePiece [][] GameBoard { get; set; }
 
         public GameStateEntity(GamePiece [][] gameBoard)
@@ -32,17 +32,17 @@ namespace Entities
     public class GamePiece
     {
         public PieceType Type { get; set; }
-        public Player Color { get; set; }
+        public Color Color { get; set; }
         public bool HasMoved { get; set; } 
 
-        public GamePiece(PieceType piece, Player color)
+        public GamePiece(PieceType piece, Color color)
         {
             Type = piece;
             Color = color;
             HasMoved = false;
         }
 
-        public GamePiece(PieceType piece, Player color, bool hasMoved)
+        public GamePiece(PieceType piece, Color color, bool hasMoved)
         {
             Type = piece;
             Color = color;
@@ -50,14 +50,14 @@ namespace Entities
         }
     }
 
-    public class GamePieceEntity
+    public class GameMoveEntity
     {
-    	public Player Color { get; set; }
+    	public Color Color { get; set; }
         public PieceType Type { get; set; }
     	public Point CurrentPos { get; set; }
     	public Point RequestedPos { get; set; }
 
-        public GamePieceEntity(PieceType type, Point currentPos, Point requestedPos, Player color)
+        public GameMoveEntity(PieceType type, Point currentPos, Point requestedPos, Color color)
     	{
     	    Type = type;
     	    CurrentPos = currentPos;
