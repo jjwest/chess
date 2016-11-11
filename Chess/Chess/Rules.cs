@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using Enums;
 using Entities;
+
 
 namespace Rules
 {
@@ -207,17 +209,63 @@ namespace Rules
 	    {
             GamePiece liftedPiece = state.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X];
             state.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X] = new GamePiece(PieceType.None, Color.None);
-
-            foreach (var row in state.GameBoard)
+            Point king = FindKing(piece, state);
+                
+            for (int y = 0; y < state.GameBoard.Length; y++)
             {
-                foreach (var pos in row)
+                for (int x = 0; x < state.GameBoard[y].Length; x++)
                 {
-                    if (pos.Color != piece.Color)
+                    var type = state.GameBoard[y][x].Type;
+                    var color = state.GameBoard[y][x].Color;
+                    if ((type == PieceType.Bishop || type == PieceType.Queen) && color != piece.Color)
                     {
-                        
+                        var potentialThreat = new GameMoveEntity(type, new Point(x, y), new Point(king.X, king.Y), piece.Color);
+                        if (Movement.IsDiagonal(potentialThreat, state) && Movement.PathIsClear(potentialThreat, state))
+                        {
+                            state.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X] = liftedPiece;
+                            return false;
+                        }
+                    }
+                    if ((type == PieceType.Rook || type == PieceType.Queen) && color != piece.Color)
+                    {
+                        var potentialThreat = new GameMoveEntity(type, new Point(x, y), new Point(king.X, king.Y), piece.Color);
+                        if (Movement.IsLinear(potentialThreat, state) && Movement.PathIsClear(potentialThreat, state))
+                        {
+                            state.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X] = liftedPiece;
+                            return false;
+                        }
                     }
                 }
             }
+
+            Console.WriteLine("NOT CHECKED");
+  //          state.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X] = liftedPiece;
+            return true;
 	    }
+            
+
+        private Point FindKing(GameMoveEntity piece, GameStateEntity state)
+        {
+            if (piece.Type == PieceType.King)
+                return piece.RequestedPos;
+        
+            Point king = new Point(0, 0);
+             
+            for (int y = 0; y < state.GameBoard.Length; y++)
+            {
+                for (int x = 0; x < state.GameBoard[y].Length; x++)
+                {
+                    var type = state.GameBoard[y][x].Type;
+                    var color = state.GameBoard[y][x].Color;
+                    if (type == PieceType.King && color == piece.Color)
+                    {
+                        king = new Point(x, y);
+                        break;
+                    }
+                }
+            }
+            
+            return king;
+        }
 	}
 }

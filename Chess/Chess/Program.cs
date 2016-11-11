@@ -13,9 +13,10 @@ namespace Chess
     	public static void Main (string[] args)
     	{
             var game = new GameLogic(new Database.Database(), LoadRules());           
-            var move1 = new GameMoveEntity(PieceType.King, new Point(3, 0), new Point(7, 0), Color.Black);
+            var move1 = new GameMoveEntity(PieceType.King, new Point(1, 1), new Point(1, 2), Color.White);
             var newState = game.MovePiece(move1);
-           
+            var move2 = new GameMoveEntity(PieceType.Rook, new Point(2, 1), new Point(2, 2), Color.White);
+            newState = game.MovePiece(move2);
             foreach (var row in newState.GameBoard)
             {
                 foreach (var column in row)
@@ -36,6 +37,7 @@ namespace Chess
             standard.AddRule(new KingMovement());
             standard.AddRule(new QueenMovement());
             standard.AddRule(new PawnMovement());
+            standard.AddRule(new Check());
 
             return standard;
     	}

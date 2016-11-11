@@ -19,7 +19,7 @@ namespace Entities
     {
     	public bool PawnIsPromoted { get; set; } = false;
     	public bool KingIsChecked { get; set; } = false;
-    	public Color ActivePlayer { get; set; } = Color.Black;
+        public Color ActivePlayer { get; set; } = Color.White;
     	public Color Winner { get; set; } = Color.None;
         public GamePiece [][] GameBoard { get; set; }
 
