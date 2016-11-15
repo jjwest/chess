@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Rules;
 using Entities;
+using Logic;
 
 namespace Chess
 {
@@ -13,10 +14,10 @@ namespace Chess
     	public static void Main (string[] args)
     	{
             var game = new GameLogic(new Database.Database(), LoadRules());           
-            var move1 = new GameMoveEntity(PieceType.King, new Point(1, 1), new Point(1, 2), Color.White);
-            var newState = game.MovePiece(move1);
-            var move2 = new GameMoveEntity(PieceType.Rook, new Point(2, 1), new Point(2, 2), Color.White);
-            newState = game.MovePiece(move2);
+//            var move1 = new GameMoveEntity(PieceType.King, new Point(1, 1), new Point(1, 2), Color.White);
+//            var newState = game.MovePiece(move1);
+            var move2 = new GameMoveEntity(PieceType.Rook, new Point(3, 0), new Point(4, 0), Color.White);
+            var newState = game.MovePiece(move2);
             foreach (var row in newState.GameBoard)
             {
                 foreach (var column in row)

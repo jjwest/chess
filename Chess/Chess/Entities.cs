@@ -15,7 +15,7 @@ namespace Entities
         }
     }
 
-    public class GameStateEntity
+    public class GameStateEntity 
     {
     	public bool PawnIsPromoted { get; set; } = false;
     	public bool KingIsChecked { get; set; } = false;

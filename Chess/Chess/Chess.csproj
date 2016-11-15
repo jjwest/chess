@@ -74,6 +74,7 @@
     <Compile Include="RuleBook.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="GameLogic.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
