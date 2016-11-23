@@ -6,88 +6,55 @@
         xmlns:local="clr-namespace:NewChess"
         mc:Ignorable="d"
         Title="MainWindow" Height="768" Width="1024">
-    <Grid>
+    <Grid Name="MainGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="83*"/>
-            <ColumnDefinition Width="933*"/>
+            <ColumnDefinition Width="600"/>
+            <ColumnDefinition Width="300*"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="77*"/>
-        </Grid.RowDefinitions>
-        <Rectangle Fill="#FFC85600" HorizontalAlignment="Left" Height="485" Margin="47,20,0,0" Stroke="Black" VerticalAlignment="Top" Width="500" Grid.Row="2" Grid.ColumnSpan="2"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="59,87,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.ColumnSpan="2"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="36.333,87,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="96.333,87,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="156.333,87,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="215.333,87,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="275.333,87,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="335.333,87,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="395.333,87,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="36.333,145,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="96.333,145,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="156.333,145,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="216.333,145,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="275.333,145,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="335.333,145,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="395.333,145,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="59,145,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.ColumnSpan="2"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="59,203,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.ColumnSpan="2"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="36.333,203,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="96.333,203,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="156.333,203,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="215.333,203,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="275.333,203,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="335.333,203,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="395.333,203,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="36.333,261,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="96.333,261,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="156.333,261,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="216.333,261,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="275.333,261,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="335.333,261,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="395.333,261,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="59,261,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.ColumnSpan="2"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="59,321,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.ColumnSpan="2"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="36.333,321,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="96.333,321,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="156.333,321,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="215.333,321,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="275.333,321,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="335.333,321,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="395.333,321,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="58" Margin="36.333,379,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="58" Margin="96.333,379,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="58" Margin="156.333,379,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="58" Margin="216.333,379,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="58" Margin="275.333,379,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="58" Margin="335.333,379,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="58" Margin="395.333,379,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="59,377,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.ColumnSpan="2"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="59,435,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.ColumnSpan="2"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="36.333,435,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="96.333,435,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="156.333,435,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="215.333,435,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="275.333,435,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="335.333,435,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="395.333,435,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="36.333,29,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="96.333,29,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="156.333,29,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="216.333,29,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="275.333,29,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="335.333,29,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FF480000" HorizontalAlignment="Left" Height="60" Margin="395.333,29,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" Grid.Row="2" Grid.Column="1"/>
-        <Rectangle Fill="#FFF9D093" HorizontalAlignment="Left" Height="60" Margin="59,29,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="6.217,0.742" Grid.Row="2" Grid.ColumnSpan="2"/>
-        <Menu x:Name="menu1" HorizontalAlignment="Left" Height="4" Margin="-411,52,0,0" Grid.Row="2" VerticalAlignment="Top" Width="8"/>
-        <Button x:Name="button" Content="Start new game" Grid.Column="1" HorizontalAlignment="Left" Margin="663,439,0,0" Grid.Row="2" VerticalAlignment="Top" Width="118" Height="32"/>
-        <Button x:Name="button_Copy" Content="Surrender" Grid.Column="1" HorizontalAlignment="Left" Margin="663,321,0,0" Grid.Row="2" VerticalAlignment="Top" Width="118" Height="32"/>
-        <Button x:Name="button_Copy1" Content="Quit" Grid.Column="1" HorizontalAlignment="Left" Margin="663,471,0,0" Grid.Row="2" VerticalAlignment="Top" Width="118" Height="32"/>
-        <Label x:Name="label" Content="White player's turn" Grid.Column="1" HorizontalAlignment="Left" Margin="545,87,0,0" Grid.Row="2" VerticalAlignment="Top" Height="58" Width="315" FontSize="32"/>
-        <Label x:Name="label_Copy" Content="Black player's turn" Grid.Column="1" HorizontalAlignment="Left" Margin="545,89,0,0" Grid.Row="2" VerticalAlignment="Top" Height="58" Width="315" FontSize="32" Visibility="Hidden"/>
-        <Label x:Name="label1" Content="YOU ARE CHECKED" Grid.Column="1" HorizontalAlignment="Left" Margin="483,152,0,0" Grid.Row="2" VerticalAlignment="Top" Height="97" Width="440" Background="White" FontSize="48"/>
-        <Label x:Name="label2" Content="YOU LOSE!!!!!!!" Grid.Column="1" HorizontalAlignment="Left" Height="150" Margin="119,203,0,0" Grid.Row="2" VerticalAlignment="Top" Width="597" FontSize="96" FontWeight="Bold" Background="#FFF00303" Visibility="Hidden"/>
+        <Grid Name="GameBoard" Grid.Column="0" Margin="50, 100, 0, 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+        </Grid>
+        <Grid Name="UtilityGrid" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200*"/>             
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="45"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="45"/>
+                <RowDefinition Height="45"/>
+                <RowDefinition Height="10*"/>
+            </Grid.RowDefinitions>
+
+            <Button Name="surrenderButton" Content="Surrender" Grid.Column="0" Grid.Row="6" Width="140" Height="40"/>
+            <Button Name="startNewGameButton" Content="Start new game" Grid.Column="0" Grid.Row="8" Width="140" Height="40"/>
+            <Button Name="quitButton" Content="Quit" Grid.Column="0" Grid.Row="9" Width="140" Height="40"/>
+        </Grid>
     </Grid>
+    
 </Window>
