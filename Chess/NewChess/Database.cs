@@ -16,8 +16,7 @@ namespace Database
     }
     public class Database : DatabaseInterface
     {
-        private GamePiece[][] board = new GamePiece[][] {
-            new GamePiece[] {
+        private List<GamePiece> board = new List<GamePiece> {
                 new GamePiece(PieceType.King, Color.Black),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
@@ -25,9 +24,7 @@ namespace Database
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None)
-            },
-            new GamePiece[] {
+                new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.Pawn, Color.Black),
                 new GamePiece(PieceType.Pawn, Color.Black),
                 new GamePiece(PieceType.Pawn, Color.Black),
@@ -35,9 +32,6 @@ namespace Database
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None)
-            },
-            new GamePiece[] {
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
@@ -45,9 +39,6 @@ namespace Database
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None)
-            },
-            new GamePiece[] {
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
@@ -55,9 +46,6 @@ namespace Database
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None)
-            },
-            new GamePiece[] {
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
@@ -65,9 +53,6 @@ namespace Database
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None)
-            },
-            new GamePiece[] {
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
@@ -75,9 +60,6 @@ namespace Database
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None)
-            },
-            new GamePiece[] {
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
@@ -85,9 +67,12 @@ namespace Database
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None)
-            },
-            new GamePiece[] {
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
@@ -96,18 +81,17 @@ namespace Database
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None),
                 new GamePiece(PieceType.None, Color.None)
-            }
         };
         public GameStateEntity GetState()
         {
-            return new GameStateEntity(board);
+            return new GameStateEntity(new Board(board));
         }
         public void ResetBoard()
         {
         }
         public void SaveState(GameStateEntity state)
         {
-            board = state.GameBoard;
+            board = state.GameBoard.GetGameBoardAsList();
         }
     }
 }

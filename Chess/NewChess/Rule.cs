@@ -12,65 +12,65 @@ namespace Rules
 {
     public interface Rule
     {
-        bool IsValid(GameMoveEntity piece, GameStateEntity gameBoard);
+        bool IsValid(GameMoveEntity movement, GameStateEntity gameBoard);
     }
     public class OnlyMoveOwnPiece : Rule
     {
-        public bool IsValid(GameMoveEntity piece, GameStateEntity state)
+        public bool IsValid(GameMoveEntity movement, GameStateEntity state)
         {
-            return piece.Color == state.ActivePlayer;
+            return movement.Color == state.ActivePlayer;
         }
     }
     public class RookMovement : Rule
     {
-        public bool IsValid(GameMoveEntity piece, GameStateEntity state)
+        public bool IsValid(GameMoveEntity movement, GameStateEntity state)
         {
-            if (!piece.Type.Equals(PieceType.Rook))
+            if (!movement.Type.Equals(PieceType.Rook))
                 return true;
-            if (Utilities.StepOnOwnPiece(piece, state))
+            if (Utilities.StepOnOwnPiece(movement, state))
                 return false;
-            return Utilities.IsLinear(piece, state) && Utilities.PathIsClear(piece, state.GameBoard);
+            return Utilities.IsLinear(movement, state) && Utilities.PathIsClear(movement, state.GameBoard);
         }
     }
     public class PawnMovement : Rule
     {
-        public bool IsValid(GameMoveEntity piece, GameStateEntity state)
+        public bool IsValid(GameMoveEntity movement, GameStateEntity state)
         {
-            if (!piece.Type.Equals(PieceType.Pawn))
+            if (!movement.Type.Equals(PieceType.Pawn))
                 return true;
-            if (Utilities.StepOnOwnPiece(piece, state))
+            if (Utilities.StepOnOwnPiece(movement, state))
                 return false;
-            return (NormalMovement(piece, state) ||
-                    ChargeMovement(piece, state) ||
-                    AttackMovement(piece, state));
+            return (NormalMovement(movement, state) ||
+                    ChargeMovement(movement, state) ||
+                    AttackMovement(movement, state));
         }
-        private bool NormalMovement(GameMoveEntity piece, GameStateEntity state)
+        private bool NormalMovement(GameMoveEntity movement, GameStateEntity state)
         {
-            int deltaX = piece.RequestedPos.X - piece.CurrentPos.X;
-            int deltaY = piece.RequestedPos.Y - piece.CurrentPos.Y;
+            int deltaX = movement.RequestedPos.X - movement.CurrentPos.X;
+            int deltaY = movement.RequestedPos.Y - movement.CurrentPos.Y;
             if (deltaX != 0)
                 return false;
-            if (piece.Color == Color.White)
+            if (movement.Color == Color.White)
                 return deltaY == -1;
             else
                 return deltaY == 1;
         }
-        private bool ChargeMovement(GameMoveEntity piece, GameStateEntity state)
+        private bool ChargeMovement(GameMoveEntity movement, GameStateEntity state)
         {
-            int deltaX = Math.Abs(piece.RequestedPos.X - piece.CurrentPos.X);
-            int deltaY = piece.RequestedPos.Y - piece.CurrentPos.Y;
-            var gamePiece = state.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X];
-            if (piece.Color == Color.White)
+            int deltaX = Math.Abs(movement.RequestedPos.X - movement.CurrentPos.X);
+            int deltaY = movement.RequestedPos.Y - movement.CurrentPos.Y;
+            var gamePiece = state.GameBoard.GetPieceAt(movement.CurrentPos);
+            if (movement.Color == Color.White)
                 return deltaX == 0 && deltaY == -2 && !gamePiece.HasMoved;
             else
                 return deltaX == 0 && deltaY == 2 && !gamePiece.HasMoved;
         }
-        private bool AttackMovement(GameMoveEntity piece, GameStateEntity state)
+        private bool AttackMovement(GameMoveEntity movement, GameStateEntity state)
         {
-            int deltaX = Math.Abs(piece.RequestedPos.X - piece.CurrentPos.X);
-            int deltaY = piece.RequestedPos.Y - piece.CurrentPos.Y;
-            var target = state.GameBoard[piece.RequestedPos.Y][piece.RequestedPos.X];
-            if (piece.Color == Color.White)
+            int deltaX = Math.Abs(movement.RequestedPos.X - movement.CurrentPos.X);
+            int deltaY = movement.RequestedPos.Y - movement.CurrentPos.Y;
+            var target = state.GameBoard.GetPieceAt(movement.RequestedPos);
+            if (movement.Color == Color.White)
                 return deltaX == 1 && deltaY == -1 && target.Color == Color.Black;
             else
                 return deltaX == 1 && deltaY == 1 && target.Color == Color.Black;
@@ -78,95 +78,93 @@ namespace Rules
     }
     public class BishopMovement : Rule
     {
-        public bool IsValid(GameMoveEntity piece, GameStateEntity state)
+        public bool IsValid(GameMoveEntity movement, GameStateEntity state)
         {
-            if (!piece.Type.Equals(PieceType.Bishop))
+            if (!movement.Type.Equals(PieceType.Bishop))
                 return true;
-            if (Utilities.StepOnOwnPiece(piece, state))
+            if (Utilities.StepOnOwnPiece(movement, state))
                 return false;
-            return Utilities.IsDiagonal(piece, state) && Utilities.PathIsClear(piece, state.GameBoard);
+            return Utilities.IsDiagonal(movement, state) && Utilities.PathIsClear(movement, state.GameBoard);
         }
     }
     public class KnightMovement : Rule
     {
-        public bool IsValid(GameMoveEntity piece, GameStateEntity state)
+        public bool IsValid(GameMoveEntity movement, GameStateEntity state)
         {
-            if (!piece.Type.Equals(PieceType.Knight))
+            if (!movement.Type.Equals(PieceType.Knight))
                 return true;
-            if (Utilities.StepOnOwnPiece(piece, state))
+            if (Utilities.StepOnOwnPiece(movement, state))
                 return false;
-            int deltaX = Math.Abs(piece.RequestedPos.X - piece.CurrentPos.X);
-            int deltaY = Math.Abs(piece.RequestedPos.Y - piece.CurrentPos.Y);
+
+            int deltaX = Math.Abs(movement.RequestedPos.X - movement.CurrentPos.X);
+            int deltaY = Math.Abs(movement.RequestedPos.Y - movement.CurrentPos.Y);
             return deltaX == 2 && deltaY == 1 || deltaX == 1 && deltaY == 2;
         }
     }
     public class QueenMovement : Rule
     {
-        public bool IsValid(GameMoveEntity piece, GameStateEntity state)
+        public bool IsValid(GameMoveEntity movement, GameStateEntity state)
         {
-            if (!piece.Type.Equals(PieceType.Queen))
+            if (!movement.Type.Equals(PieceType.Queen))
                 return true;
-            if (Utilities.StepOnOwnPiece(piece, state))
+            if (Utilities.StepOnOwnPiece(movement, state))
                 return false;
-            return ((Utilities.IsLinear(piece, state) || Utilities.IsDiagonal(piece, state)) &&
-            Utilities.PathIsClear(piece, state.GameBoard));
+
+            return ((Utilities.IsLinear(movement, state) || Utilities.IsDiagonal(movement, state)) &&
+            Utilities.PathIsClear(movement, state.GameBoard));
         }
     }
     public class KingMovement : Rule
     {
-        public bool IsValid(GameMoveEntity piece, GameStateEntity state)
+        public bool IsValid(GameMoveEntity movement, GameStateEntity state)
         {
-            if (!piece.Type.Equals(PieceType.King))
+            if (!movement.Type.Equals(PieceType.King))
                 return true;
-            return CastleMovement(piece, state) || NormalMovement(piece, state);
+            return CastleMovement(movement, state) || NormalMovement(movement, state);
         }
-        private bool CastleMovement(GameMoveEntity piece, GameStateEntity state)
+        private bool CastleMovement(GameMoveEntity movement, GameStateEntity state)
         {
-            var king = state.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X];
-            var rook = state.GameBoard[piece.RequestedPos.Y][piece.RequestedPos.X];
-            Point newKingPos = piece.RequestedPos;
-            if (piece.RequestedPos.X == 0 && piece.RequestedPos.Y == 0)
+            var king = state.GameBoard.GetPieceAt(movement.CurrentPos);
+            var rook = state.GameBoard.GetPieceAt(movement.RequestedPos);
+            Point newKingPos = movement.RequestedPos;
+            if (movement.RequestedPos.X == 0 && movement.RequestedPos.Y == 0)
                 newKingPos = new Point(1, 0);
-            else if (piece.RequestedPos.X == 7 && piece.RequestedPos.Y == 0)
+            else if (movement.RequestedPos.X == 7 && movement.RequestedPos.Y == 0)
                 newKingPos = new Point(5, 0);
-            else if (piece.RequestedPos.X == 0 && piece.RequestedPos.Y == 7)
+            else if (movement.RequestedPos.X == 0 && movement.RequestedPos.Y == 7)
                 newKingPos = new Point(2, 7);
-            else if (piece.RequestedPos.X == 7 && piece.RequestedPos.Y == 7)
+            else if (movement.RequestedPos.X == 7 && movement.RequestedPos.Y == 7)
                 newKingPos = new Point(6, 7);
-            GameStateEntity mockState = new GameStateEntity(Utilities.DeepCopy(state.GameBoard));
-            mockState.ActivePlayer = state.ActivePlayer;
-            mockState.KingIsChecked = state.KingIsChecked;
-            mockState.PawnIsPromoted = state.PawnIsPromoted;
-            mockState.Winner = state.Winner;
-            mockState.GameBoard[newKingPos.Y][newKingPos.X] = mockState.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X];
-            mockState.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X] = new GamePiece(PieceType.None, Color.None);
+
+            GameStateEntity mockState = state.Clone();
+            mockState.GameBoard.PlacePieceAt(newKingPos, mockState.GameBoard.GetPieceAt(movement.CurrentPos));
+            mockState.GameBoard.PlacePieceAt(movement.CurrentPos, new GamePiece(PieceType.None, Color.None));
+
             return !king.HasMoved &&
                       !rook.HasMoved &&
                     rook.Type == PieceType.Rook &&
-                    Utilities.PathIsClear(piece, state.GameBoard) &&
-                    Utilities.StepOnOwnPiece(piece, state) &&
+                    Utilities.PathIsClear(movement, state.GameBoard) &&
+                    Utilities.StepOnOwnPiece(movement, state) &&
                    !Utilities.KingIsChecked(mockState, mockState.ActivePlayer);
         }
-        private bool NormalMovement(GameMoveEntity piece, GameStateEntity state)
+        private bool NormalMovement(GameMoveEntity movement, GameStateEntity state)
         {
-            if (Utilities.StepOnOwnPiece(piece, state))
+            if (Utilities.StepOnOwnPiece(movement, state))
                 return false;
-            int deltaX = Math.Abs(piece.RequestedPos.X - piece.CurrentPos.X);
-            int deltaY = Math.Abs(piece.RequestedPos.Y - piece.CurrentPos.Y);
+            int deltaX = Math.Abs(movement.RequestedPos.X - movement.CurrentPos.X);
+            int deltaY = Math.Abs(movement.RequestedPos.Y - movement.CurrentPos.Y);
             return deltaX < 2 && deltaY < 2;
         }
     }
     public class Check : Rule
     {
-        public bool IsValid(GameMoveEntity piece, GameStateEntity state)
+        public bool IsValid(GameMoveEntity movement, GameStateEntity state)
         {
-            GameStateEntity mockState = new GameStateEntity(Utilities.DeepCopy((state.GameBoard)));
-            mockState.ActivePlayer = state.ActivePlayer;
-            mockState.KingIsChecked = state.KingIsChecked;
-            mockState.PawnIsPromoted = state.PawnIsPromoted;
-            mockState.Winner = state.Winner;
-            mockState.GameBoard[piece.RequestedPos.Y][piece.RequestedPos.X] = mockState.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X];
-            mockState.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X] = new GamePiece(PieceType.None, Color.None);
+            GameStateEntity mockState = state.Clone();
+            var board = mockState.GameBoard;
+            board.PlacePieceAt(movement.RequestedPos, board.GetPieceAt(movement.CurrentPos));
+            board.PlacePieceAt(movement.CurrentPos, new GamePiece(PieceType.None, Color.None));
+
             return !Utilities.KingIsChecked(mockState, state.ActivePlayer);
         }
     }

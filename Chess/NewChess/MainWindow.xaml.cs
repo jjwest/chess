@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using Logic;
 using Database;
 using Rules;
+using Entities;
 
 namespace NewChess
 {
@@ -27,10 +28,10 @@ namespace NewChess
         public MainWindow()
         {
             InitializeComponent();
-            DrawGameBoard();
             RuleBook rules = LoadRules();
             GameLogic logic = new GameLogic(new Database.Database(), rules);
-
+            var state = logic.GetInitialState();
+            DrawGameBoard(state);
         }
 
      
@@ -48,7 +49,7 @@ namespace NewChess
 
             return standard;
         }
-        private void DrawGameBoard()
+        private void DrawGameBoard(GameStateEntity state)
         {
             var converter = new BrushConverter();
             var blackBrush = (Brush)converter.ConvertFromString("#FF480000");
@@ -77,6 +78,8 @@ namespace NewChess
                     Grid.SetRow(rect, y);
                 }
             }
+
+
         }
     }
 }

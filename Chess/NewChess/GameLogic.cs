@@ -20,6 +20,11 @@ namespace Logic
             database = _database;
             ruleBook = _rules;
         }
+
+        public GameStateEntity GetInitialState()
+        {
+            return database.GetState();
+        }
         public GameStateEntity MovePiece(GameMoveEntity piece)
         {
             var gameState = database.GetState();
@@ -34,17 +39,18 @@ namespace Logic
         private GameStateEntity ExecuteMove(GameMoveEntity piece, GameStateEntity state)
         {
             bool hasMoved = true;
-            var movedPiece = state.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X];
-            var target = state.GameBoard[piece.RequestedPos.Y][piece.RequestedPos.X];
+            var movedPiece = state.GameBoard.GetPieceAt(piece.CurrentPos);
+            var target = state.GameBoard.GetPieceAt(piece.RequestedPos);
             var opponentColor = state.ActivePlayer == Color.White ? Color.Black : Color.White;
+
             if (Castling(movedPiece, target))
             {
                 state = PerformCastling(piece, state);
             }
             else
             {
-                state.GameBoard[piece.CurrentPos.Y][piece.CurrentPos.X] = new GamePiece(PieceType.None, Color.None);
-                state.GameBoard[piece.RequestedPos.Y][piece.RequestedPos.X] = new GamePiece(piece.Type, piece.Color, hasMoved);
+                state.GameBoard.PlacePieceAt(piece.CurrentPos, new GamePiece(PieceType.None, Color.None));
+                state.GameBoard.PlacePieceAt(piece.RequestedPos, new GamePiece(piece.Type, piece.Color, hasMoved));
             }
             if (Utilities.KingIsChecked(state, opponentColor))
             {
@@ -72,34 +78,34 @@ namespace Logic
             {
                 if (piece.RequestedPos.X == 7)
                 {
-                    state.GameBoard[7][7] = new GamePiece(PieceType.None, Color.None);
-                    state.GameBoard[7][4] = new GamePiece(PieceType.None, Color.None);
-                    state.GameBoard[7][6] = new GamePiece(PieceType.King, Color.White, hasMoved);
-                    state.GameBoard[7][5] = new GamePiece(PieceType.Rook, Color.White, hasMoved);
+                    state.GameBoard.PlacePieceAt(new Point(7, 7), new GamePiece(PieceType.None, Color.None));
+                    state.GameBoard.PlacePieceAt(new Point(4, 7), new GamePiece(PieceType.None, Color.None));
+                    state.GameBoard.PlacePieceAt(new Point(6, 7), new GamePiece(PieceType.King, Color.White, hasMoved));
+                    state.GameBoard.PlacePieceAt(new Point(5, 7), new GamePiece(PieceType.Rook, Color.White, hasMoved));
                 }
                 else
                 {
-                    state.GameBoard[7][0] = new GamePiece(PieceType.None, Color.None);
-                    state.GameBoard[7][4] = new GamePiece(PieceType.None, Color.None);
-                    state.GameBoard[7][2] = new GamePiece(PieceType.King, Color.White, hasMoved);
-                    state.GameBoard[7][3] = new GamePiece(PieceType.Rook, Color.White, hasMoved);
+                    state.GameBoard.PlacePieceAt(new Point(0, 7), new GamePiece(PieceType.None, Color.None));
+                    state.GameBoard.PlacePieceAt(new Point(4, 7), new GamePiece(PieceType.None, Color.None));
+                    state.GameBoard.PlacePieceAt(new Point(2, 7), new GamePiece(PieceType.King, Color.White, hasMoved));
+                    state.GameBoard.PlacePieceAt(new Point(3, 7), new GamePiece(PieceType.Rook, Color.White, hasMoved));
                 }
             }
             else
             {
                 if (piece.RequestedPos.X == 7)
                 {
-                    state.GameBoard[0][7] = new GamePiece(PieceType.None, Color.None);
-                    state.GameBoard[0][3] = new GamePiece(PieceType.None, Color.None);
-                    state.GameBoard[0][5] = new GamePiece(PieceType.King, Color.Black, hasMoved);
-                    state.GameBoard[0][4] = new GamePiece(PieceType.Rook, Color.Black, hasMoved);
+                    state.GameBoard.PlacePieceAt(new Point(7, 0), new GamePiece(PieceType.None, Color.None));
+                    state.GameBoard.PlacePieceAt(new Point(3, 0), new GamePiece(PieceType.None, Color.None));
+                    state.GameBoard.PlacePieceAt(new Point(5, 0), new GamePiece(PieceType.King, Color.Black, hasMoved));
+                    state.GameBoard.PlacePieceAt(new Point(4, 0), new GamePiece(PieceType.Rook, Color.Black, hasMoved));
                 }
                 else
                 {
-                    state.GameBoard[0][0] = new GamePiece(PieceType.None, Color.None);
-                    state.GameBoard[0][3] = new GamePiece(PieceType.None, Color.None);
-                    state.GameBoard[0][1] = new GamePiece(PieceType.King, Color.Black, hasMoved);
-                    state.GameBoard[0][2] = new GamePiece(PieceType.Rook, Color.Black, hasMoved);
+                    state.GameBoard.PlacePieceAt(new Point(0, 0), new GamePiece(PieceType.None, Color.None));
+                    state.GameBoard.PlacePieceAt(new Point(3, 0), new GamePiece(PieceType.None, Color.None));
+                    state.GameBoard.PlacePieceAt(new Point(1, 0), new GamePiece(PieceType.King, Color.Black, hasMoved));
+                    state.GameBoard.PlacePieceAt(new Point(2, 0), new GamePiece(PieceType.Rook, Color.Black, hasMoved));
                 }
             }
             return state;
@@ -126,11 +132,11 @@ namespace Logic
         {
             var piecesThatReachTarget = new List<Point>();
             var board = state.GameBoard;
-            for (int y = 0; y < board.Length; y++)
+            for (int y = 0; y < board.Width(); y++)
             {
-                for (int x = 0; x < board[y].Length; x++)
+                for (int x = 0; x < board.Width(); x++)
                 {
-                    var piece = board[y][x];
+                    var piece = board.GetPieceAt(new Point(x, y));
                     if (piece.Color == playerColor)
                     {
                         GameMoveEntity move = new GameMoveEntity(piece.Type, new Point(x, y), target, piece.Color);
@@ -156,7 +162,7 @@ namespace Logic
         {
             if (aggressors.Count() > 1)
                 return false;
-            var aggressor = state.GameBoard[aggressors[0].Y][aggressors[0].X];
+            var aggressor = state.GameBoard.GetPieceAt(aggressors[0]);
             if (aggressor.Type == PieceType.Bishop ||
                 aggressor.Type == PieceType.Rook ||
                 aggressor.Type == PieceType.Queen)
@@ -186,7 +192,7 @@ namespace Logic
         public GameStateEntity TransformPiece(GameMoveEntity piece)
         {
             var gameState = database.GetState();
-            gameState.GameBoard[piece.RequestedPos.Y][piece.RequestedPos.X] = new GamePiece(piece.Type, piece.Color);
+            gameState.GameBoard.PlacePieceAt(piece.RequestedPos, new GamePiece(piece.Type, piece.Color));
             database.SaveState(gameState);
             return gameState;
         }

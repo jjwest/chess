@@ -20,12 +20,16 @@ namespace Entities
     }
     public class GameStateEntity
     {
+        public GameStateEntity Clone()
+        {
+            return (GameStateEntity)this.MemberwiseClone();
+        }
         public bool PawnIsPromoted { get; set; } = false;
         public bool KingIsChecked { get; set; } = false;
         public Color ActivePlayer { get; set; } = Color.White;
         public Color Winner { get; set; } = Color.None;
-        public GamePiece[][] GameBoard { get; set; }
-        public GameStateEntity(GamePiece[][] gameBoard)
+        public GameBoard GameBoard { get; set; }
+        public GameStateEntity(GameBoard gameBoard)
         {
             GameBoard = gameBoard;
         }
@@ -60,6 +64,51 @@ namespace Entities
             CurrentPos = currentPos;
             RequestedPos = requestedPos;
             Color = color;
+        }
+    }
+
+    public interface GameBoard
+    {
+        int Width();
+        GamePiece GetPieceAt(Point p);
+
+        List<GamePiece> GetGameBoardAsList();
+        void PlacePieceAt(Point p, GamePiece piece);
+    }
+
+    public class Board : GameBoard
+    {
+        const int width = 8;
+        private List<GamePiece> gameBoard;
+
+        public Board(List<GamePiece> board)
+        {
+            gameBoard = board;
+        }
+
+        public int Width()
+        {
+            return width;
+        }
+
+        public GamePiece GetPieceAt(Point p)
+        {
+            return gameBoard[ GetIndex(p) ];
+        }
+
+        public List<GamePiece> GetGameBoardAsList()
+        {
+            return gameBoard;
+        }
+
+        public void PlacePieceAt(Point p, GamePiece piece)
+        {
+            gameBoard[ GetIndex(p) ] = piece;
+        }
+
+        private int GetIndex(Point p)
+        {
+            return p.Y * width + p.X;
         }
     }
 }
