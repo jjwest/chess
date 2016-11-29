@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="Rule.cs" />
     <Compile Include="RuleBook.cs" />
+    <Compile Include="Textures.cs" />
     <Compile Include="Utility.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -68,7 +69,6 @@
     </Compile>
     <Compile Include="Database.cs" />
     <Compile Include="Entities.cs" />
-    <Compile Include="Enums.cs" />
     <Compile Include="GameLogic.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -101,6 +101,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="blackBishop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="blackKing.png" />
+    <Resource Include="blackKnight.png" />
+    <Resource Include="blackPawn.png" />
+    <Resource Include="blackQueen.png" />
+    <Resource Include="blackRook.png" />
+    <Resource Include="whiteBishop.png" />
+    <Resource Include="whiteKing.png" />
+    <Resource Include="whiteKnight.png" />
+    <Resource Include="whitePawn.png" />
+    <Resource Include="whiteQueen.png" />
+    <Resource Include="whiteRook.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

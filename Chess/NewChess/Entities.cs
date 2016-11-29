@@ -4,10 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Enums;
-
 namespace Entities
 {
+    public enum PieceType
+    {
+        Pawn,
+        Bishop,
+        Knight,
+        Rook,
+        Queen,
+        King,
+        None
+    }
+    public enum Color
+    {
+        White,
+        Black,
+        None
+    }
     public class Point
     {
         public int X { get; set; }
