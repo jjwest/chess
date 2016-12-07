@@ -7,7 +7,6 @@ using System.Runtime.Serialization;
 
 namespace Entities
 {
-    [DataContract]
     public enum PieceType
     {
         Pawn,
@@ -18,7 +17,6 @@ namespace Entities
         King,
         None
     }
-    [DataContract]
     public enum Color
     {
         White,
@@ -36,18 +34,12 @@ namespace Entities
         }
     }
 
-    [DataContract]
     public class GameStateEntity
     {
-        [DataMember]
         public bool PawnIsPromoted { get; set; } = false;
-        [DataMember]
         public bool KingIsChecked { get; set; } = false;
-        [DataMember]
         public Color ActivePlayer { get; set; } = Color.White;
-        [DataMember]
         public Color Winner { get; set; } = Color.None;
-        [DataMember]
         public GameBoard GameBoard { get; set; }
 
         public GameStateEntity(GameBoard gameBoard)
@@ -68,6 +60,8 @@ namespace Entities
         public PieceType Type { get; set; }
         public Color Color { get; set; }
         public bool HasMoved { get; set; }
+
+        public GamePiece() { }
         public GamePiece(PieceType piece, Color color)
         {
             Type = piece;
@@ -109,25 +103,27 @@ namespace Entities
 
         GamePiece GetPieceAt(Point p);
 
-        List<GamePiece> GetGameBoardAsList();
         void PlacePieceAt(Point p, GamePiece piece);
     }
 
-    [DataContract]
     public class Board : GameBoard, ICloneable
     {
-        [DataMember]
-        const int width = 8;
+        protected const int width = 8;
+        protected List<GamePiece> gameBoard;
 
-        [DataMember]
-        private List<GamePiece> gameBoard;
 
+        private Board() {}
 
         public Board(List<GamePiece> board)
         {
             gameBoard = board;
         }
         
+        public int Width()
+        {
+            return width;
+        }
+
         public Object Clone()
         {
             var clone = new List<GamePiece>();
@@ -142,19 +138,9 @@ namespace Entities
             return new Board(clone);
         }
 
-        public int Width()
-        {
-            return width;
-        }
-
         public GamePiece GetPieceAt(Point p)
         {
             return gameBoard[ GetIndex(p) ];
-        }
-
-        public List<GamePiece> GetGameBoardAsList()
-        {
-            return gameBoard;
         }
 
         public void PlacePieceAt(Point p, GamePiece piece)

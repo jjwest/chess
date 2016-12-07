@@ -30,6 +30,8 @@ namespace NewChess
         private GameMoveEntity movement = new GameMoveEntity(new Entities.Point(0, 0), new Entities.Point(0, 0));
         private Textures textures;
         private GameLogic logic;
+        private const int SQUARE_SIZE = 60;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -63,11 +65,108 @@ namespace NewChess
         }
         private void Draw(GameStateEntity state)
         {
-            this.GameBoard.Children.Clear();
-            DrawBoard(state);
-            DrawGamePieces(state);
-            DrawInvisibleButtons(state);
-            DrawLabels(state);      
+            if (state.PawnIsPromoted)
+            {
+                DrawPromotion(state);
+            }
+            else
+            {
+                this.GameBoard.Children.Clear();
+                DrawBoard(state);
+                DrawGamePieces(state);
+                DrawInvisibleButtons(state);
+                DrawLabels(state);
+            }    
+        }
+
+        private void DrawPromotion(GameStateEntity state)
+        {
+            DeactivateBoard(state);
+
+            infoLabel.Content = "Your pawn has been promoted.\nPlease select a piece";
+            var promotingPlayer = state.ActivePlayer == Entities.Color.White ? Entities.Color.Black : Entities.Color.White;
+
+            var options = new List<GamePiece>
+            {
+                 new GamePiece(PieceType.Queen, promotingPlayer),
+                  new GamePiece(PieceType.Rook, promotingPlayer),
+                  new GamePiece(PieceType.Bishop, promotingPlayer),
+                  new GamePiece(PieceType.Knight, promotingPlayer)
+            };
+
+            DrawPromotionOptions(options, state);
+            DrawPromotionButtons(options);  
+        }
+
+        private void DeactivateBoard(GameStateEntity state)
+        {
+            var converter = new BrushConverter();
+            var whiteBrush = (Brush)converter.ConvertFromString("#99F9D093");
+
+            for (int y = 0; y < state.GameBoard.Width(); y++)
+            {
+                for (int x = 0; x < state.GameBoard.Width(); x++)
+                {
+                    Rectangle rect = new Rectangle();
+                    rect.Height = SQUARE_SIZE;
+                    rect.Width = SQUARE_SIZE;
+                    rect.Name = "rect" + x.ToString() + y.ToString();
+                    rect.Fill = whiteBrush;
+                    this.GameBoard.Children.Add(rect);
+                    Grid.SetColumn(rect, x);
+                    Grid.SetRow(rect, y);
+                }
+            }
+        }
+
+        private void DrawPromotionOptions(List<GamePiece> options, GameStateEntity state)
+        {
+           
+            for (int i = 0; i < options.Count; i++)
+            {
+                var texture = textures.GetTexture(options[i]);
+                this.promotionGrid.Children.Add(texture);
+                Grid.SetColumn(texture, i);
+                Grid.SetRow(texture, 0);
+            }
+        }
+
+        private void DrawPromotionButtons(List<GamePiece> options)
+        {
+            for (int i = 0; i < options.Count; i++)
+            {
+                Button button = new Button();
+                button.Width = SQUARE_SIZE;
+                button.Height = SQUARE_SIZE;
+                button.Name = options[i].Type.ToString();
+                button.Opacity = 0;
+                button.Click += HandlePromotion;
+
+                this.promotionGrid.Children.Add(button);
+                Grid.SetColumn(button, i);
+                Grid.SetRow(button, 0);
+            }
+        }
+
+        private void HandlePromotion(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+            var pieceType = button.Name;
+
+            if (pieceType == "Queen")
+                movement.Type = PieceType.Queen;
+            else if (pieceType == "Rook")
+                movement.Type = PieceType.Rook;
+            else if (pieceType == "Knight")
+                movement.Type = PieceType.Knight;
+            else
+                movement.Type = PieceType.Bishop;
+
+            var newState = logic.TransformPiece(movement);
+
+            this.promotionGrid.Children.Clear();
+            Draw(newState);
+
         }
 
         private void DrawBoard(GameStateEntity state)
@@ -81,8 +180,8 @@ namespace NewChess
                 for (int x = 0; x < state.GameBoard.Width(); x++)
                 {
                     Rectangle rect = new Rectangle();
-                    rect.Height = 60;
-                    rect.Width = 60;
+                    rect.Height = SQUARE_SIZE;
+                    rect.Width = SQUARE_SIZE;
                     rect.Name = "rect" + x.ToString() + y.ToString();
 
                     if ((x + y) % 2 == 0)
@@ -122,8 +221,8 @@ namespace NewChess
                 for (int x = 0; x < state.GameBoard.Width(); x++)
                 {
                     Button button = new Button();
-                    button.Width = 60;
-                    button.Height = 60;
+                    button.Width = SQUARE_SIZE;
+                    button.Height = SQUARE_SIZE;
                     button.Name = "button" + x.ToString() + y.ToString();
                     button.Opacity = 0;
                     button.Click += HandleClick;
@@ -143,11 +242,11 @@ namespace NewChess
                 playerTurnLabel.Content = "Black Player's Turn";
 
             if (state.Winner != Entities.Color.None)
-                checkedLabel.Content = String.Format("Game is over, \n{0} player has won!", state.Winner);
+                infoLabel.Content = String.Format("Game is over, \n{0} player has won!", state.Winner);
             else if (state.KingIsChecked)
-                checkedLabel.Content = "You're checked!";
+                infoLabel.Content = "You're checked!";
             else
-                checkedLabel.Content = "";
+                infoLabel.Content = "";
         }
         private void HandleClick(object sender, EventArgs e)
         {
@@ -159,7 +258,6 @@ namespace NewChess
 
             if (hasPressedSquare)
             {
-                Console.WriteLine("Inne i pressed square");
                 movement.RequestedPos = new Entities.Point(x, y);
                 var newState = logic.MovePiece(movement);
                 Draw(newState);
@@ -167,7 +265,6 @@ namespace NewChess
             }
             else
             {
-                Console.WriteLine("Inne i else");
                 hasPressedSquare = true;
                 movement.CurrentPos = new Entities.Point(x, y);
             }

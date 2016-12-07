@@ -32,8 +32,10 @@ namespace Logic
             if (ruleBook.MoveIsValid(movement, gameState))
             {
                 gameState = ExecuteMove(movement, gameState);
+                gameState = CheckForPromotion(movement, gameState);
                 gameState = ChangeActivePlayer(gameState);
                 database.SaveState(gameState);
+
                 return database.GetState();
             }
 
@@ -220,93 +222,32 @@ namespace Logic
             return blockPositions;
         }
 
+        private GameStateEntity CheckForPromotion(GameMoveEntity movement, GameStateEntity state)
+        {
+            if (movement.Type == PieceType.Pawn)
+            {
+                if (state.ActivePlayer == Color.White)
+                    state.PawnIsPromoted = movement.RequestedPos.Y == 0;
+                else
+                    state.PawnIsPromoted = movement.RequestedPos.Y == state.GameBoard.Width() - 1;
+            }
+
+            return state;
+        }
 
         public GameStateEntity TransformPiece(GameMoveEntity piece)
         {
             var gameState = database.GetState();
             gameState.GameBoard.PlacePieceAt(piece.RequestedPos, new GamePiece(piece.Type, piece.Color));
+            gameState.PawnIsPromoted = false;
             database.SaveState(gameState);
-            return gameState;
+
+            return database.GetState();
         }
 
         public void ResetBoard()
         {
-             GameStateEntity state = new GameStateEntity(new Board(
-              new List<GamePiece> {
-                new GamePiece(PieceType.Rook, Color.Black),
-                new GamePiece(PieceType.Knight, Color.Black),
-                new GamePiece(PieceType.Bishop, Color.Black),
-                new GamePiece(PieceType.Queen, Color.Black),
-                new GamePiece(PieceType.King, Color.Black),
-                new GamePiece(PieceType.Bishop, Color.Black),
-                new GamePiece(PieceType.Knight, Color.Black),
-                new GamePiece(PieceType.Rook, Color.Black),
-
-                new GamePiece(PieceType.Pawn, Color.Black),
-                new GamePiece(PieceType.Pawn, Color.Black),
-                new GamePiece(PieceType.Pawn, Color.Black),
-                new GamePiece(PieceType.Pawn, Color.Black),
-                new GamePiece(PieceType.Pawn, Color.Black),
-                new GamePiece(PieceType.Pawn, Color.Black),
-                new GamePiece(PieceType.Pawn, Color.Black),
-                new GamePiece(PieceType.Pawn, Color.Black),
-
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-
-                new GamePiece(PieceType.Pawn, Color.White),
-                new GamePiece(PieceType.Pawn, Color.White),
-                new GamePiece(PieceType.Pawn, Color.White),
-                new GamePiece(PieceType.Pawn, Color.White),
-                new GamePiece(PieceType.Pawn, Color.White),
-                new GamePiece(PieceType.Pawn, Color.White),
-                new GamePiece(PieceType.Pawn, Color.White),
-                new GamePiece(PieceType.Pawn, Color.White),
-
-                new GamePiece(PieceType.Rook, Color.White),
-                new GamePiece(PieceType.Knight, Color.White),
-                new GamePiece(PieceType.Bishop, Color.White),
-                new GamePiece(PieceType.Queen, Color.White),
-                new GamePiece(PieceType.King, Color.White),
-                new GamePiece(PieceType.Bishop, Color.White),
-                new GamePiece(PieceType.Knight, Color.White),
-                new GamePiece(PieceType.Rook, Color.White)       
-            }));
-
-            database.SaveState(state);  
+            database.ResetBoard();
         }
     }
 }

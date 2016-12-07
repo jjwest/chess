@@ -14,101 +14,163 @@ namespace Database
         GameStateEntity GetState();
         void ResetBoard();
         void SaveState(GameStateEntity gameState);
+
+        string DatabasePath { get; set; }
     }
+
+    public class SerializableState
+    {
+        public bool PawnIsPromoted { get; set; }
+        public bool KingIsChecked { get; set; }
+        public Color ActivePlayer { get; set; }
+        public Color Winner { get; set; }
+        public List<GamePiece> GameBoard { get; set; }
+
+        public SerializableState() { }
+
+        public SerializableState(GameStateEntity state)
+        {
+            GameBoard = new List<GamePiece>();
+
+            for (int y = 0; y < state.GameBoard.Width(); y++)
+            {
+                for (int x = 0; x < state.GameBoard.Width(); x++)
+                {
+                   GameBoard.Add(state.GameBoard.GetPieceAt(new Point(x, y)));
+                }
+            }
+
+            PawnIsPromoted = state.PawnIsPromoted;
+            KingIsChecked = state.KingIsChecked;
+            ActivePlayer = state.ActivePlayer;
+            Winner = state.Winner;
+        }
+    }
+
     public class Database : DatabaseInterface
     {
-        private GameStateEntity state = new GameStateEntity( new Board(
-            new List<GamePiece> {
-                new GamePiece(PieceType.King, Color.Black),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.King, Color.White),
-                new GamePiece(PieceType.Rook, Color.White),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
 
-                new GamePiece(PieceType.Pawn, Color.Black),
-                new GamePiece(PieceType.Pawn, Color.Black),
-                new GamePiece(PieceType.Pawn, Color.Black),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
+        public string DatabasePath { get; set; } = "database.xml";
 
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.Pawn, Color.White),
-                new GamePiece(PieceType.Pawn, Color.White),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None),
-                new GamePiece(PieceType.None, Color.None)
-        }));
         public GameStateEntity GetState()
         {
-            return state;
+            try
+            {
+                var serializer = new XmlSerializer(typeof(SerializableState));
+                using (FileStream fs = File.OpenRead(DatabasePath))
+                {
+                    var deserialized = (SerializableState)serializer.Deserialize(fs);
+                    Board board = new Board(deserialized.GameBoard);
+                    GameStateEntity state = new GameStateEntity(board);
+                    state.ActivePlayer = deserialized.ActivePlayer;
+                    state.PawnIsPromoted = deserialized.PawnIsPromoted;
+                    state.KingIsChecked = deserialized.KingIsChecked;
+                    state.Winner = deserialized.Winner;
+
+                    return state;
+                }
+            }
+            catch (Exception ex)
+            {
+                return GetDefaultState();
+            }
         }
+
         public void ResetBoard()
         {
+            SaveState(GetDefaultState());
         }
+
         public void SaveState(GameStateEntity _state)
+        {           
+            try
+            {
+                var serializableState = new SerializableState(_state);
+                var serializer = new XmlSerializer(typeof(SerializableState));
+                using (FileStream fs = File.Create(DatabasePath))
+                {
+                    serializer.Serialize(fs, serializableState);
+                }
+            }
+            catch (Exception ex) { Console.WriteLine(ex.InnerException.ToString()); }
+        }
+
+        private GameStateEntity GetDefaultState()
         {
-            state = _state;
-            MemoryStream memstream = new MemoryStream();
-            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(GameStateEntity));
-            ser.WriteObject(memstream, _state);
-            FileStream fs = File.Create("database.json");
-            memstream.WriteTo(fs);
-            memstream.Close();
-            fs.Close();
-      
+            return new GameStateEntity(new Board(
+              new List<GamePiece> {
+                new GamePiece(PieceType.Rook, Color.Black),
+                new GamePiece(PieceType.Knight, Color.Black),
+                new GamePiece(PieceType.Bishop, Color.Black),
+                new GamePiece(PieceType.Queen, Color.Black),
+                new GamePiece(PieceType.King, Color.Black),
+                new GamePiece(PieceType.Bishop, Color.Black),
+                new GamePiece(PieceType.Knight, Color.Black),
+                new GamePiece(PieceType.Rook, Color.Black),
+
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+
+                new GamePiece(PieceType.Rook, Color.White),
+                new GamePiece(PieceType.Knight, Color.White),
+                new GamePiece(PieceType.Bishop, Color.White),
+                new GamePiece(PieceType.Queen, Color.White),
+                new GamePiece(PieceType.King, Color.White),
+                new GamePiece(PieceType.Bishop, Color.White),
+                new GamePiece(PieceType.Knight, Color.White),
+                new GamePiece(PieceType.Rook, Color.White)
+            }));
         }
     }
 }
