@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Rules;
 using Entities;
+using Utility;
 
 namespace Rules
 {
@@ -16,9 +17,51 @@ namespace Rules
         {
             rules.Add(rule);
         }
-        public bool MoveIsValid(GameMoveEntity piece, GameStateEntity gameBoard)
+        public bool MoveIsValid(GameMoveEntity movement, GameStateEntity state)
         {
-            return rules.All(rule => rule.IsValid(piece, gameBoard));
+            bool moveIsAllowed = rules.All(rule => rule.IsValid(movement, state));
+            bool kingIsChecked = false;
+
+            if (moveIsAllowed)
+            {
+                var clonedState = state.Clone();
+
+                clonedState.GameBoard.PlacePieceAt(movement.RequestedPos, new GamePiece(movement.Type, movement.Color));
+                clonedState.GameBoard.PlacePieceAt(movement.CurrentPos, new GamePiece(PieceType.None, Color.None));
+                clonedState.ActivePlayer = state.ActivePlayer == Color.White ? Color.Black : Color.White;
+                kingIsChecked = KingIsChecked(clonedState, state.ActivePlayer);
+            }
+
+            return moveIsAllowed && !kingIsChecked;
+        }
+
+        public bool KingIsChecked(GameStateEntity state, Color kingColor)
+        {
+            var board = state.GameBoard;
+            var kingPos = Utilities.FindKing(state, kingColor);
+            var opponentColor = kingColor == Color.White ? Color.Black : Color.White;
+         
+            for (int y = 0; y < board.Width(); y++)
+            {
+                for (int x = 0; x < board.Width(); x++)
+                {
+                    var piece = board.GetPieceAt(new Point(x, y));
+       
+                    if (piece.Color == opponentColor)
+                    {                    
+                        GameMoveEntity moveToKing = new GameMoveEntity(piece.Type, new Point(x, y), kingPos, piece.Color);
+                        
+                        if (rules.All(rule => rule.IsValid(moveToKing, state)))
+                        {
+                            Console.WriteLine(String.Format("Checked from {0}, {1}", x, y));
+                            return true;
+                        }
+                           
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

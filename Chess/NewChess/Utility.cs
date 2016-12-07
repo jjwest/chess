@@ -33,26 +33,40 @@ namespace Utility
             int stepY = deltaY == 0 ? 0 : deltaY / System.Math.Abs(deltaY);
             int currX = movement.CurrentPos.X;
             int currY = movement.CurrentPos.Y;
+
             for (int i = 1; i < Math.Max(Math.Abs(deltaX), Math.Abs(deltaY)); i++)
             {
                 var piece = board.GetPieceAt(new Point(currX + i * stepX, currY + i * stepY));
                 if (piece.Type != PieceType.None)
                     return false;
             }
+
             return true;
         }
-        public static bool KingIsChecked(GameStateEntity state, Color kingColor)
+        public static bool CheckedAfterCastling(GameStateEntity state, Color kingColor)
         {
             var board = state.GameBoard;
             Point king = FindKing(state, kingColor);
-            Console.WriteLine(String.Format("KING: {0}, {1}", king.X, king.Y));
+
             for (int y = 0; y < board.Width(); y++)
             {
                 for (int x = 0; x < board.Width(); x++)
                 {
-                    //Det saknas ett IF statement som gör att funktionen kan returnera true.
-                    var piece = state.GameBoard.GetPieceAt(new Point(x, y));
-                    
+                    var type = board.GetPieceAt(new Point (x, y)).Type;
+                    var color = board.GetPieceAt(new Point(x, y)).Color;
+                    if ((type == PieceType.Bishop || type == PieceType.Queen) && color != state.ActivePlayer)
+                    {
+                        var potentialThreat = new GameMoveEntity(type, new Point(x, y), new Point(king.X, king.Y), state.ActivePlayer);
+                        if (Utilities.IsDiagonal(potentialThreat, state) && Utilities.PathIsClear(potentialThreat, board))
+                            return true;
+                    }
+                    if ((type == PieceType.Rook || type == PieceType.Queen) && color != state.ActivePlayer)
+                    {
+                        Console.WriteLine("INNE I ROOK");
+                        var potentialThreat = new GameMoveEntity(type, new Point(x, y), new Point(king.X, king.Y), state.ActivePlayer);
+                        if (Utilities.IsLinear(potentialThreat, state) && Utilities.PathIsClear(potentialThreat, board))
+                            return true;
+                    }
                 }
             }
             return false;

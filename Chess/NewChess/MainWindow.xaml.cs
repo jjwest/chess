@@ -26,7 +26,10 @@ namespace NewChess
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool hasPressedSquare = false;
+        private GameMoveEntity movement = new GameMoveEntity(new Entities.Point(0, 0), new Entities.Point(0, 0));
         private Textures textures;
+        private GameLogic logic;
         public MainWindow()
         {
             InitializeComponent();
@@ -39,14 +42,9 @@ namespace NewChess
             LoadTexture(PieceType.Rook, "blackRook.png", "whiteRook.png");
 
             RuleBook rules = LoadRules();
-            GameLogic logic = new GameLogic(new Database.Database(), rules);
+            logic = new GameLogic(new Database.Database(), rules);
             var state = logic.GetInitialState();
-            DrawGameBoard(state);
-           
-          
-            // this.GameBoard.Children.Add(img);
-            // Grid.SetColumn(img, 3);
-            // Grid.SetRow(img, 2);
+            Draw(state);
         }
 
      
@@ -54,25 +52,30 @@ namespace NewChess
         {
             RuleBook standard = new RuleBook();
             standard.AddRule(new OnlyMoveOwnPiece());
-            standard.AddRule(new BishopMovement());
+            standard.AddRule(new BishopMovement()); 
             standard.AddRule(new RookMovement());
             standard.AddRule(new KnightMovement());
             standard.AddRule(new KingMovement());
             standard.AddRule(new QueenMovement());
             standard.AddRule(new PawnMovement());
-            standard.AddRule(new Check());
 
             return standard;
         }
-        private void DrawGameBoard(GameStateEntity state)
+        private void Draw(GameStateEntity state)
         {
             this.GameBoard.Children.Clear();
+            DrawBoard(state);
+            DrawGamePieces(state);
+            DrawInvisibleButtons(state);
+            DrawLabels(state);      
+        }
 
+        private void DrawBoard(GameStateEntity state)
+        {
             var converter = new BrushConverter();
             var blackBrush = (Brush)converter.ConvertFromString("#FF480000");
             var whiteBrush = (Brush)converter.ConvertFromString("#FFF9D093");
 
-            // Draw board
             for (int y = 0; y < state.GameBoard.Width(); y++)
             {
                 for (int x = 0; x < state.GameBoard.Width(); x++)
@@ -80,6 +83,7 @@ namespace NewChess
                     Rectangle rect = new Rectangle();
                     rect.Height = 60;
                     rect.Width = 60;
+                    rect.Name = "rect" + x.ToString() + y.ToString();
 
                     if ((x + y) % 2 == 0)
                         rect.Fill = blackBrush;
@@ -91,12 +95,10 @@ namespace NewChess
                     Grid.SetRow(rect, y);
                 }
             }
+        }
 
-
-
-            // Draw pieces
-            textures.AddTexturesToGrid(this.GameBoard);
-
+        private void DrawGamePieces(GameStateEntity state)
+        {
             for (int y = 0; y < state.GameBoard.Width(); y++)
             {
                 for (int x = 0; x < state.GameBoard.Width(); x++)
@@ -105,11 +107,71 @@ namespace NewChess
                     if (piece.Type != PieceType.None)
                     {
                         var texture = textures.GetTexture(piece);
+                        this.GameBoard.Children.Add(texture);
                         Grid.SetColumn(texture, x);
                         Grid.SetRow(texture, y);
                     }
                 }
             }
+        }
+
+        private void DrawInvisibleButtons(GameStateEntity state)
+        {
+            for (int y = 0; y < state.GameBoard.Width(); y++)
+            {
+                for (int x = 0; x < state.GameBoard.Width(); x++)
+                {
+                    Button button = new Button();
+                    button.Width = 60;
+                    button.Height = 60;
+                    button.Name = "button" + x.ToString() + y.ToString();
+                    button.Opacity = 0;
+                    button.Click += HandleClick;
+
+                    this.GameBoard.Children.Add(button);
+                    Grid.SetColumn(button, x);
+                    Grid.SetRow(button, y);
+                }
+            }
+        }
+
+        private void DrawLabels(GameStateEntity state)
+        { 
+            if (state.ActivePlayer == Entities.Color.White)
+                playerTurnLabel.Content = "White Player's Turn";
+            else
+                playerTurnLabel.Content = "Black Player's Turn";
+
+            if (state.Winner != Entities.Color.None)
+                checkedLabel.Content = String.Format("Game is over, \n{0} player has won!", state.Winner);
+            else if (state.KingIsChecked)
+                checkedLabel.Content = "You're checked!";
+            else
+                checkedLabel.Content = "";
+        }
+        private void HandleClick(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+            // Buttons are always named buttonXY, where X and Y are its coordinates
+            int length = button.Name.Length;
+            int x = (int)Char.GetNumericValue(button.Name[length - 2]);
+            int y = (int)Char.GetNumericValue(button.Name[length - 1]);
+
+            if (hasPressedSquare)
+            {
+                Console.WriteLine("Inne i pressed square");
+                movement.RequestedPos = new Entities.Point(x, y);
+                var newState = logic.MovePiece(movement);
+                Draw(newState);
+                hasPressedSquare = false;
+            }
+            else
+            {
+                Console.WriteLine("Inne i else");
+                hasPressedSquare = true;
+                movement.CurrentPos = new Entities.Point(x, y);
+            }
+                
         }
 
         public void LoadTexture(PieceType type, string pathToBlack, string pathToWhite)
@@ -118,17 +180,27 @@ namespace NewChess
             blackBitmap.BeginInit();
             blackBitmap.UriSource = new Uri(@pathToBlack, UriKind.RelativeOrAbsolute);
             blackBitmap.EndInit();
-            Image blackImg = new Image();
-            blackImg.Source = blackBitmap;
+           
 
             BitmapImage whiteBitmap = new BitmapImage();
             whiteBitmap.BeginInit();
             whiteBitmap.UriSource = new Uri(@pathToWhite, UriKind.RelativeOrAbsolute);
             whiteBitmap.EndInit();
-            Image whiteImg = new Image();
-            whiteImg.Source = whiteBitmap;
+         
 
-            textures.AddTexture(type, blackImg, whiteImg);
+            textures.AddTexture(type, blackBitmap, whiteBitmap);
+        }
+
+        private void QuitApplication(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void StartNewGame(object sender, RoutedEventArgs e)
+        {
+            logic.ResetBoard();
+            var state = logic.GetInitialState();
+            Draw(state);
         }
     }
 }

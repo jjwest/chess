@@ -35,7 +35,7 @@ namespace Rules
     {
         public bool IsValid(GameMoveEntity movement, GameStateEntity state)
         {
-            if (!movement.Type.Equals(PieceType.Pawn))
+            if (movement.Type != PieceType.Pawn)
                 return true;
             if (Utilities.StepOnOwnPiece(movement, state))
                 return false;
@@ -45,9 +45,11 @@ namespace Rules
         }
         private bool NormalMovement(GameMoveEntity movement, GameStateEntity state)
         {
+            bool destinationEmpty = state.GameBoard.GetPieceAt(movement.RequestedPos).Type == PieceType.None;
             int deltaX = movement.RequestedPos.X - movement.CurrentPos.X;
             int deltaY = movement.RequestedPos.Y - movement.CurrentPos.Y;
-            if (deltaX != 0)
+
+            if (!destinationEmpty || deltaX != 0)
                 return false;
             if (movement.Color == Color.White)
                 return deltaY == -1;
@@ -59,6 +61,10 @@ namespace Rules
             int deltaX = Math.Abs(movement.RequestedPos.X - movement.CurrentPos.X);
             int deltaY = movement.RequestedPos.Y - movement.CurrentPos.Y;
             var gamePiece = state.GameBoard.GetPieceAt(movement.CurrentPos);
+            bool destinationEmpty = state.GameBoard.GetPieceAt(movement.RequestedPos).Type == PieceType.None;
+
+            if (deltaX != 0 || !Utilities.PathIsClear(movement, state.GameBoard) || !destinationEmpty)
+                return false;
             if (movement.Color == Color.White)
                 return deltaX == 0 && deltaY == -2 && !gamePiece.HasMoved;
             else
@@ -69,10 +75,11 @@ namespace Rules
             int deltaX = Math.Abs(movement.RequestedPos.X - movement.CurrentPos.X);
             int deltaY = movement.RequestedPos.Y - movement.CurrentPos.Y;
             var target = state.GameBoard.GetPieceAt(movement.RequestedPos);
+
             if (movement.Color == Color.White)
                 return deltaX == 1 && deltaY == -1 && target.Color == Color.Black;
             else
-                return deltaX == 1 && deltaY == 1 && target.Color == Color.Black;
+                return deltaX == 1 && deltaY == 1 && target.Color == Color.White;
         }
     }
     public class BishopMovement : Rule
@@ -97,6 +104,7 @@ namespace Rules
 
             int deltaX = Math.Abs(movement.RequestedPos.X - movement.CurrentPos.X);
             int deltaY = Math.Abs(movement.RequestedPos.Y - movement.CurrentPos.Y);
+
             return deltaX == 2 && deltaY == 1 || deltaX == 1 && deltaY == 2;
         }
     }
@@ -119,6 +127,7 @@ namespace Rules
         {
             if (!movement.Type.Equals(PieceType.King))
                 return true;
+
             return CastleMovement(movement, state) || NormalMovement(movement, state);
         }
         private bool CastleMovement(GameMoveEntity movement, GameStateEntity state)
@@ -126,6 +135,7 @@ namespace Rules
             var king = state.GameBoard.GetPieceAt(movement.CurrentPos);
             var rook = state.GameBoard.GetPieceAt(movement.RequestedPos);
             Point newKingPos = movement.RequestedPos;
+
             if (movement.RequestedPos.X == 0 && movement.RequestedPos.Y == 0)
                 newKingPos = new Point(1, 0);
             else if (movement.RequestedPos.X == 7 && movement.RequestedPos.Y == 0)
@@ -140,31 +150,20 @@ namespace Rules
             mockState.GameBoard.PlacePieceAt(movement.CurrentPos, new GamePiece(PieceType.None, Color.None));
 
             return !king.HasMoved &&
-                      !rook.HasMoved &&
+                   !rook.HasMoved &&
                     rook.Type == PieceType.Rook &&
                     Utilities.PathIsClear(movement, state.GameBoard) &&
                     Utilities.StepOnOwnPiece(movement, state) &&
-                   !Utilities.KingIsChecked(mockState, mockState.ActivePlayer);
+                   !Utilities.CheckedAfterCastling(mockState, mockState.ActivePlayer);
         }
         private bool NormalMovement(GameMoveEntity movement, GameStateEntity state)
         {
             if (Utilities.StepOnOwnPiece(movement, state))
                 return false;
+
             int deltaX = Math.Abs(movement.RequestedPos.X - movement.CurrentPos.X);
             int deltaY = Math.Abs(movement.RequestedPos.Y - movement.CurrentPos.Y);
             return deltaX < 2 && deltaY < 2;
-        }
-    }
-    public class Check : Rule
-    {
-        public bool IsValid(GameMoveEntity movement, GameStateEntity state)
-        {
-            GameStateEntity mockState = state.Clone();
-            var board = mockState.GameBoard;
-            board.PlacePieceAt(movement.RequestedPos, board.GetPieceAt(movement.CurrentPos));
-            board.PlacePieceAt(movement.CurrentPos, new GamePiece(PieceType.None, Color.None));
-
-            return !Utilities.KingIsChecked(mockState, state.ActivePlayer);
         }
     }
 }

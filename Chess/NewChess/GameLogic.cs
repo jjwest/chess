@@ -24,44 +24,60 @@ namespace Logic
         {
             return database.GetState();
         }
-        public GameStateEntity MovePiece(GameMoveEntity piece)
+        public GameStateEntity MovePiece(GameMoveEntity movement)
         {
             var gameState = database.GetState();
-            if (ruleBook.MoveIsValid(piece, gameState))
+            movement = SetColorAndType(movement, gameState);
+
+            if (ruleBook.MoveIsValid(movement, gameState))
             {
-                gameState = ExecuteMove(piece, gameState);
+                gameState = ExecuteMove(movement, gameState);
+                gameState = ChangeActivePlayer(gameState);
                 database.SaveState(gameState);
                 return database.GetState();
             }
+
             return gameState;
         }
-        private GameStateEntity ExecuteMove(GameMoveEntity piece, GameStateEntity state)
+
+        private GameMoveEntity SetColorAndType(GameMoveEntity movement, GameStateEntity state)
+        {
+            movement.Color = state.GameBoard.GetPieceAt(movement.CurrentPos).Color;
+            movement.Type = state.GameBoard.GetPieceAt(movement.CurrentPos).Type;
+
+            return movement;
+        }
+
+        private GameStateEntity ChangeActivePlayer(GameStateEntity state)
+        {
+            state.ActivePlayer = state.ActivePlayer == Color.White ? Color.Black : Color.White;
+            return state;
+        }
+
+        private GameStateEntity ExecuteMove(GameMoveEntity movement, GameStateEntity state)
         {
             bool hasMoved = true;
-            var movedPiece = state.GameBoard.GetPieceAt(piece.CurrentPos);
-            var target = state.GameBoard.GetPieceAt(piece.RequestedPos);
+            var movedPiece = state.GameBoard.GetPieceAt(movement.CurrentPos);
+            var target = state.GameBoard.GetPieceAt(movement.RequestedPos);
             var opponentColor = state.ActivePlayer == Color.White ? Color.Black : Color.White;
 
             if (Castling(movedPiece, target))
             {
-                state = PerformCastling(piece, state);
+                state = PerformCastling(movement, state);
             }
             else
             {
-                state.GameBoard.PlacePieceAt(piece.CurrentPos, new GamePiece(PieceType.None, Color.None));
-                state.GameBoard.PlacePieceAt(piece.RequestedPos, new GamePiece(piece.Type, piece.Color, hasMoved));
+                state.GameBoard.PlacePieceAt(movement.CurrentPos, new GamePiece(PieceType.None, Color.None));
+                state.GameBoard.PlacePieceAt(movement.RequestedPos, new GamePiece(movement.Type, movement.Color, hasMoved));
             }
-            if (Utilities.KingIsChecked(state, opponentColor))
+            if (ruleBook.KingIsChecked(state, opponentColor))
             {
-                Console.WriteLine("KING IS CHECKED");
                 if (Checkmate(state))
                 {
                     state.Winner = state.ActivePlayer;
-                    Console.WriteLine("GAME OVER!");
                 }
                 state.KingIsChecked = true;
             }
-            state.ActivePlayer = opponentColor;
             return state;
         }
         private bool Castling(GamePiece movedPiece, GamePiece target)
@@ -109,22 +125,33 @@ namespace Logic
             }
             return state;
         }
+
         private bool Checkmate(GameStateEntity state)
         {
             Color enemyColor = state.ActivePlayer == Color.White ? Color.Black : Color.White;
             Point kingPos = Utilities.FindKing(state, enemyColor);
-            List<Point> aggressors = FindPiecesThatReachTarget(state, kingPos, enemyColor);
-            return !CanMoveKing(state) && !CanCaptureAggressor(state, aggressors) && !CanBlockPath(state, aggressors);
+            List<Point> aggressors = FindPiecesThatReachTarget(state, kingPos, state.ActivePlayer);
+            var clonedState = state.Clone();
+            clonedState.ActivePlayer = enemyColor;
+
+            return !CanMoveKing(clonedState) && !CanCaptureAggressor(clonedState, aggressors) && !CanBlockPath(clonedState, aggressors);
         }
         private bool CanMoveKing(GameStateEntity state)
         {
             List<GameMoveEntity> positions = new List<GameMoveEntity>();
-            Color kingColor = state.ActivePlayer == Color.White ? Color.Black : Color.White;
-            var king = Utilities.FindKing(state, kingColor);
+            var king = Utilities.FindKing(state, state.ActivePlayer);
+
             for (int y = king.Y - 1; y <= king.Y + 1; y++)
-                for (int x = king.X - 1; y <= king.X + 1; x++)
+            {
+                for (int x = king.X - 1; x <= king.X + 1; x++)
+                {
                     if (x >= 0 && y >= 0 && x < 8 && y < 8)
-                        positions.Add(new GameMoveEntity(PieceType.King, king, new Point(x, y), kingColor));
+                    {
+                        positions.Add(new GameMoveEntity(PieceType.King, king, new Point(x, y), state.ActivePlayer));
+                    }
+                }
+            }
+
             return positions.Any(pos => ruleBook.MoveIsValid(pos, state));
         }
         private List<Point> FindPiecesThatReachTarget(GameStateEntity state, Point target, Color playerColor)
@@ -152,9 +179,12 @@ namespace Logic
         {
             if (aggressors.Count() > 1)
                 return false;
+
             Point aggressor = aggressors[0];
+
             if (FindPiecesThatReachTarget(state, aggressor, state.ActivePlayer).Count() > 0)
                 return true;
+
             return false;
         }
         private bool CanBlockPath(GameStateEntity state, List<Point> aggressors)
@@ -171,6 +201,7 @@ namespace Logic
                 var blockPositions = FindBlockPositions(state, kingPos, aggressors[0]);
                 return blockPositions.Any(pos => FindPiecesThatReachTarget(state, pos, kingColor).Count() > 0);
             }
+
             return false;
         }
         private List<Point> FindBlockPositions(GameStateEntity state, Point king, Point aggressor)
@@ -188,12 +219,94 @@ namespace Logic
             }
             return blockPositions;
         }
+
+
         public GameStateEntity TransformPiece(GameMoveEntity piece)
         {
             var gameState = database.GetState();
             gameState.GameBoard.PlacePieceAt(piece.RequestedPos, new GamePiece(piece.Type, piece.Color));
             database.SaveState(gameState);
             return gameState;
+        }
+
+        public void ResetBoard()
+        {
+             GameStateEntity state = new GameStateEntity(new Board(
+              new List<GamePiece> {
+                new GamePiece(PieceType.Rook, Color.Black),
+                new GamePiece(PieceType.Knight, Color.Black),
+                new GamePiece(PieceType.Bishop, Color.Black),
+                new GamePiece(PieceType.Queen, Color.Black),
+                new GamePiece(PieceType.King, Color.Black),
+                new GamePiece(PieceType.Bishop, Color.Black),
+                new GamePiece(PieceType.Knight, Color.Black),
+                new GamePiece(PieceType.Rook, Color.Black),
+
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+                new GamePiece(PieceType.Pawn, Color.Black),
+
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+                new GamePiece(PieceType.None, Color.None),
+
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+                new GamePiece(PieceType.Pawn, Color.White),
+
+                new GamePiece(PieceType.Rook, Color.White),
+                new GamePiece(PieceType.Knight, Color.White),
+                new GamePiece(PieceType.Bishop, Color.White),
+                new GamePiece(PieceType.Queen, Color.White),
+                new GamePiece(PieceType.King, Color.White),
+                new GamePiece(PieceType.Bishop, Color.White),
+                new GamePiece(PieceType.Knight, Color.White),
+                new GamePiece(PieceType.Rook, Color.White)       
+            }));
+
+            database.SaveState(state);  
         }
     }
 }

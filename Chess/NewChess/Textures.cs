@@ -12,47 +12,42 @@ namespace NewChess
    
     class Textures
     {
-        private Dictionary<PieceType, Image> blackTextures;
-        private Dictionary<PieceType, Image> whiteTextures;
+        private Dictionary<PieceType, BitmapImage> blackTextures;
+        private Dictionary<PieceType, BitmapImage> whiteTextures;
 
         public Textures()
         {
-            blackTextures = new Dictionary<PieceType, Image>();
-            whiteTextures = new Dictionary<PieceType, Image>();
+            blackTextures = new Dictionary<PieceType, BitmapImage>();
+            whiteTextures = new Dictionary<PieceType, BitmapImage>();
         }
 
-        public void AddTexture(PieceType type, Image blackTexture, Image whiteTexture)
+        public void AddTexture(PieceType type, BitmapImage blackTexture, BitmapImage whiteTexture)
         {
             blackTextures.Add(type, blackTexture);
             whiteTextures.Add(type, whiteTexture);
         }
 
-        public void AddTexturesToGrid(Grid g)
-        {
-            foreach (var entry in blackTextures)
-            {
-                g.Children.Add(entry.Value);
-            }
-            foreach (var entry in whiteTextures)
-            {
-                g.Children.Add(entry.Value);
-            }
-        }
-
         public Image GetTexture(GamePiece piece)
         {
-            Image texture;
+            Image image = new Image();
+            BitmapImage bitmap;
             if (piece.Color == Color.Black)
             {
-                if (blackTextures.TryGetValue(piece.Type, out texture))
-                    return texture;
+                if (blackTextures.TryGetValue(piece.Type, out bitmap))
+                {
+                    image.Source = bitmap;
+                    return image;
+                }
                 else
                     throw new TextureNotFoundException("Requested texture has not been loaded");
             }
             else if (piece.Color == Color.White)
             {
-                if (whiteTextures.TryGetValue(piece.Type, out texture))
-                    return texture;
+                if (whiteTextures.TryGetValue(piece.Type, out bitmap))
+                {
+                    image.Source = bitmap;
+                    return image;
+                }
                 else
                     throw new TextureNotFoundException("Requested texture has not been loaded");
             }

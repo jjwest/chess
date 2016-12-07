@@ -13,5 +13,6 @@ namespace NewChess
     /// </summary>
     public partial class App : Application
     {
+      
     }
 }
