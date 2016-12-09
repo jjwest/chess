@@ -15,9 +15,10 @@ using System.Windows.Shapes;
 using System.Drawing;
 
 using Logic;
-using Database;
-using Rules;
+using Data;
+using Logic.Rules;
 using Entities;
+using Exceptions;
 
 namespace NewChess
 {
@@ -34,17 +35,27 @@ namespace NewChess
 
         public MainWindow()
         {
+            
             InitializeComponent();
             textures = new Textures();
-            LoadTexture(PieceType.Bishop, "blackBishop.png", "whiteBishop.png");
-            LoadTexture(PieceType.Pawn, "blackPawn.png", "whitePawn.png");
-            LoadTexture(PieceType.King, "blackKing.png", "whiteKing.png");
-            LoadTexture(PieceType.Knight, "blackKnight.png", "whiteKnight.png");
-            LoadTexture(PieceType.Queen, "blackQueen.png", "whiteQueen.png");
-            LoadTexture(PieceType.Rook, "blackRook.png", "whiteRook.png");
+            try
+            {
+                var resourceLocation = "Presentation/Resources/";
+                LoadTexture(PieceType.Bishop, resourceLocation + "blackBishop.png", resourceLocation + "whiteBishop.png");
+                LoadTexture(PieceType.Pawn, resourceLocation + "blackPawn.png", resourceLocation + "whitePawn.png");
+                LoadTexture(PieceType.King, resourceLocation + "blackKing.png", resourceLocation + "whiteKing.png");
+                LoadTexture(PieceType.Knight, resourceLocation + "blackKnight.png", resourceLocation + "whiteKnight.png");
+                LoadTexture(PieceType.Queen, resourceLocation + "blackQueen.png", resourceLocation + "whiteQueen.png");
+                LoadTexture(PieceType.Rook, resourceLocation + "blackRook.png", resourceLocation + "whiteRook.png");
+            }
+            catch (ResourceNotFoundException ex)
+            {
+                DisplayError(ex.Message);
+            }
+           
 
             RuleBook rules = LoadRules();
-            logic = new GameLogic(new Database.Database(), rules);
+            logic = new GameLogic(new Data.Database(), rules);
             var state = logic.GetInitialState();
             Draw(state);
         }
@@ -287,16 +298,29 @@ namespace NewChess
         public void LoadTexture(PieceType type, string pathToBlack, string pathToWhite)
         {
             BitmapImage blackBitmap = new BitmapImage();
-            blackBitmap.BeginInit();
-            blackBitmap.UriSource = new Uri(@pathToBlack, UriKind.RelativeOrAbsolute);
-            blackBitmap.EndInit();
-           
-
             BitmapImage whiteBitmap = new BitmapImage();
-            whiteBitmap.BeginInit();
-            whiteBitmap.UriSource = new Uri(@pathToWhite, UriKind.RelativeOrAbsolute);
-            whiteBitmap.EndInit();
-         
+
+            try
+            {
+                blackBitmap.BeginInit();
+                blackBitmap.UriSource = new Uri(pathToBlack, UriKind.RelativeOrAbsolute);
+                blackBitmap.EndInit();
+            }
+            catch (Exception)
+            {
+                throw new ResourceNotFoundException("Could not find resource " + pathToBlack);
+            }
+
+            try
+            {    
+                whiteBitmap.BeginInit();
+                whiteBitmap.UriSource = new Uri(pathToWhite, UriKind.RelativeOrAbsolute);
+                whiteBitmap.EndInit();       
+            }
+            catch (Exception)
+            {
+                throw new ResourceNotFoundException("Could not find resource " + pathToWhite);
+            }
 
             textures.AddTexture(type, blackBitmap, whiteBitmap);
         }

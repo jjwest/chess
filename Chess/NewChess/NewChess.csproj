@@ -56,10 +56,32 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Rule.cs" />
-    <Compile Include="RuleBook.cs" />
-    <Compile Include="Textures.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="Data\Database.cs" />
+    <Compile Include="Data\IDatabase.cs" />
+    <Compile Include="Data\SerializableState.cs" />
+    <Compile Include="Entities\Color.cs" />
+    <Compile Include="Entities\GameBoard.cs" />
+    <Compile Include="Entities\GameMoveEntity.cs" />
+    <Compile Include="Entities\GamePiece.cs" />
+    <Compile Include="Entities\GameStateEntity.cs" />
+    <Compile Include="Entities\IGameBoard.cs" />
+    <Compile Include="Entities\PieceType.cs" />
+    <Compile Include="Entities\Point.cs" />
+    <Compile Include="Exceptions\CorruptDatabaseException.cs" />
+    <Compile Include="Exceptions\DatabaseSaveFailureException.cs" />
+    <Compile Include="Exceptions\InvalidBoardPositionException.cs" />
+    <Compile Include="Exceptions\ResourceNotFoundException.cs" />
+    <Compile Include="Logic\RuleBook.cs" />
+    <Compile Include="Logic\Rules\BishopMovement.cs" />
+    <Compile Include="Logic\Rules\IRule.cs" />
+    <Compile Include="Logic\Rules\KingMovement.cs" />
+    <Compile Include="Logic\Rules\KnightMovement.cs" />
+    <Compile Include="Logic\Rules\OnlyMoveOwnPiece.cs" />
+    <Compile Include="Logic\Rules\PawnMovement.cs" />
+    <Compile Include="Logic\Rules\QueenMovement.cs" />
+    <Compile Include="Logic\Rules\RookMovement.cs" />
+    <Compile Include="Presentation\Textures.cs" />
+    <Compile Include="Logic\Utility.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -68,9 +90,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Database.cs" />
-    <Compile Include="Entities.cs" />
-    <Compile Include="GameLogic.cs" />
+    <Compile Include="Logic\GameLogic.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -104,21 +124,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="blackBishop.png" />
+    <Resource Include="Presentation\Resources\blackBishop.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="blackKing.png" />
-    <Resource Include="blackKnight.png" />
-    <Resource Include="blackPawn.png" />
-    <Resource Include="blackQueen.png" />
-    <Resource Include="blackRook.png" />
-    <Resource Include="whiteBishop.png" />
-    <Resource Include="whiteKing.png" />
-    <Resource Include="whiteKnight.png" />
-    <Resource Include="whitePawn.png" />
-    <Resource Include="whiteQueen.png" />
-    <Resource Include="whiteRook.png" />
+    <Resource Include="Presentation\Resources\blackKing.png" />
+    <Resource Include="Presentation\Resources\blackKnight.png" />
+    <Resource Include="Presentation\Resources\blackPawn.png" />
+    <Resource Include="Presentation\Resources\blackQueen.png" />
+    <Resource Include="Presentation\Resources\blackRook.png" />
+    <Resource Include="Presentation\Resources\whiteBishop.png" />
+    <Resource Include="Presentation\Resources\whiteKing.png" />
+    <Resource Include="Presentation\Resources\whiteKnight.png" />
+    <Resource Include="Presentation\Resources\whitePawn.png" />
+    <Resource Include="Presentation\Resources\whiteQueen.png" />
+    <Resource Include="Presentation\Resources\whiteRook.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

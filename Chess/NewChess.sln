@@ -5,10 +5,6 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewChess", "NewChess\NewChess.csproj", "{72FDE3F7-5274-443F-94DA-95015E12D674}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logic", "Logic", "{41233D29-019A-4215-B081-8F1E8F38ADE0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Entitties", "Entitties", "{3B2A4B24-36D0-490D-BD15-8C1AF3C38214}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,8 +18,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{3B2A4B24-36D0-490D-BD15-8C1AF3C38214} = {41233D29-019A-4215-B081-8F1E8F38ADE0}
 	EndGlobalSection
 EndGlobal
