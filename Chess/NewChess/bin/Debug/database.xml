@@ -2,7 +2,7 @@
 <SerializableState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <PawnIsPromoted>false</PawnIsPromoted>
   <KingIsChecked>false</KingIsChecked>
-  <ActivePlayer>White</ActivePlayer>
+  <ActivePlayer>Black</ActivePlayer>
   <Winner>None</Winner>
   <GameBoard>
     <GamePiece>
@@ -186,9 +186,9 @@
       <HasMoved>false</HasMoved>
     </GamePiece>
     <GamePiece>
-      <Type>None</Type>
-      <Color>None</Color>
-      <HasMoved>false</HasMoved>
+      <Type>Pawn</Type>
+      <Color>White</Color>
+      <HasMoved>true</HasMoved>
     </GamePiece>
     <GamePiece>
       <Type>None</Type>
@@ -266,8 +266,8 @@
       <HasMoved>false</HasMoved>
     </GamePiece>
     <GamePiece>
-      <Type>Pawn</Type>
-      <Color>White</Color>
+      <Type>None</Type>
+      <Color>None</Color>
       <HasMoved>false</HasMoved>
     </GamePiece>
     <GamePiece>

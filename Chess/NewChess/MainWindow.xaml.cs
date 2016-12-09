@@ -162,10 +162,16 @@ namespace NewChess
             else
                 movement.Type = PieceType.Bishop;
 
-            var newState = logic.TransformPiece(movement);
-
-            this.promotionGrid.Children.Clear();
-            Draw(newState);
+            try
+            {
+                var newState = logic.TransformPiece(movement);
+                this.promotionGrid.Children.Clear();
+                Draw(newState);
+            }
+            catch (Exception ex)
+            {
+                DisplayError("An error has occurred. Please reinstall");
+            }
 
         }
 
@@ -259,9 +265,16 @@ namespace NewChess
             if (hasPressedSquare)
             {
                 movement.RequestedPos = new Entities.Point(x, y);
-                var newState = logic.MovePiece(movement);
-                Draw(newState);
-                hasPressedSquare = false;
+                try
+                {
+                    var newState = logic.MovePiece(movement);
+                    Draw(newState);
+                    hasPressedSquare = false;
+                }
+                catch(Exception ex)
+                {
+                    DisplayError("An error has occurred. Please reinstall.");
+                }            
             }
             else
             {
@@ -298,6 +311,15 @@ namespace NewChess
             logic.ResetBoard();
             var state = logic.GetInitialState();
             Draw(state);
+        }
+
+        private void DisplayError(string message)
+        {
+            MessageBoxResult error = MessageBox.Show(message, "Confirmation", MessageBoxButton.OK, MessageBoxImage.Error);
+            if (error == MessageBoxResult.OK)
+            {
+                Application.Current.Shutdown();
+            }
         }
     }
 }

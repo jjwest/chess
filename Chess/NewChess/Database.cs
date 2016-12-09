@@ -70,7 +70,7 @@ namespace Database
                     return state;
                 }
             }
-            catch (Exception ex)
+            catch (FileNotFoundException ex)
             {
                 return GetDefaultState();
             }
@@ -83,16 +83,13 @@ namespace Database
 
         public void SaveState(GameStateEntity _state)
         {           
-            try
+            var serializableState = new SerializableState(_state);
+            var serializer = new XmlSerializer(typeof(SerializableState));
+
+            using (FileStream fs = File.Create(DatabasePath))
             {
-                var serializableState = new SerializableState(_state);
-                var serializer = new XmlSerializer(typeof(SerializableState));
-                using (FileStream fs = File.Create(DatabasePath))
-                {
                     serializer.Serialize(fs, serializableState);
-                }
             }
-            catch (Exception ex) { Console.WriteLine(ex.InnerException.ToString()); }
         }
 
         private GameStateEntity GetDefaultState()

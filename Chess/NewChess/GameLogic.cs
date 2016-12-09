@@ -79,7 +79,10 @@ namespace Logic
                     state.Winner = state.ActivePlayer;
                 }
                 state.KingIsChecked = true;
+                return state;
             }
+
+            state.KingIsChecked = false;
             return state;
         }
         private bool Castling(GamePiece movedPiece, GamePiece target)
@@ -237,10 +240,18 @@ namespace Logic
 
         public GameStateEntity TransformPiece(GameMoveEntity piece)
         {
-            var gameState = database.GetState();
-            gameState.GameBoard.PlacePieceAt(piece.RequestedPos, new GamePiece(piece.Type, piece.Color));
-            gameState.PawnIsPromoted = false;
-            database.SaveState(gameState);
+            var state = database.GetState();
+            state.GameBoard.PlacePieceAt(piece.RequestedPos, new GamePiece(piece.Type, piece.Color));
+            state.PawnIsPromoted = false;
+
+            // We need to swap active player when checking if king is checked
+            // since the rules mandate that you can only move your own piece
+            Color opponentColor = state.ActivePlayer;
+            state.ActivePlayer = state.ActivePlayer == Color.White ? Color.Black : Color.White;
+            state.KingIsChecked = ruleBook.KingIsChecked(state, opponentColor);
+            state.ActivePlayer = state.ActivePlayer == Color.White ? Color.Black : Color.White;
+
+            database.SaveState(state);
 
             return database.GetState();
         }

@@ -37,6 +37,8 @@ namespace Rules
 
         public bool KingIsChecked(GameStateEntity state, Color kingColor)
         {
+            Console.WriteLine("Active player: " + state.ActivePlayer);
+            Console.WriteLine("King color: " + kingColor);
             var board = state.GameBoard;
             var kingPos = Utilities.FindKing(state, kingColor);
             var opponentColor = kingColor == Color.White ? Color.Black : Color.White;
@@ -48,12 +50,11 @@ namespace Rules
                     var piece = board.GetPieceAt(new Point(x, y));
        
                     if (piece.Color == opponentColor)
-                    {                    
+                    {
                         GameMoveEntity moveToKing = new GameMoveEntity(piece.Type, new Point(x, y), kingPos, piece.Color);
-                        
+
                         if (rules.All(rule => rule.IsValid(moveToKing, state)))
                         {
-                            Console.WriteLine(String.Format("Checked from {0}, {1}", x, y));
                             return true;
                         }
                            
