@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Entities;
 
-namespace NewChess
+namespace Presentation
 {
    
     class Textures

@@ -10,7 +10,7 @@ using Data;
 
 namespace Logic
 {
-    public class GameLogic
+    public class GameLogic : ILogic
     {
         private DatabaseInterface database;
         private RuleBook ruleBook;

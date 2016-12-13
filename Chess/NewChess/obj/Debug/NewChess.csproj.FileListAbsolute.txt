@@ -26,3 +26,5 @@ Z:\TDDD49\Chess\NewChess\obj\Debug\NewChess.Properties.Resources.resources
 Z:\TDDD49\Chess\NewChess\obj\Debug\NewChess.csproj.GenerateResource.Cache
 Z:\TDDD49\Chess\NewChess\obj\Debug\MainWindow.g.cs
 Z:\TDDD49\Chess\NewChess\obj\Debug\MainWindow.baml
+Z:\TDDD49\Chess\NewChess\obj\Debug\Presentation\Gui.g.cs
+Z:\TDDD49\Chess\NewChess\obj\Debug\Presentation\Gui.baml
