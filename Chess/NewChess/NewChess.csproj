@@ -58,7 +58,6 @@
     </ApplicationDefinition>
     <Compile Include="Data\Database.cs" />
     <Compile Include="Data\IDatabase.cs" />
-    <Compile Include="Data\SerializableState.cs" />
     <Compile Include="Entities\Color.cs" />
     <Compile Include="Entities\GameBoard.cs" />
     <Compile Include="Entities\GameMoveEntity.cs" />

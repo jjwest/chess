@@ -12,8 +12,6 @@ namespace Entities
         protected const int width = 8;
         protected List<GamePiece> gameBoard;
 
-        private GameBoard() { }
-
         public GameBoard(List<GamePiece> board)
         {
             gameBoard = board;
